@@ -31,7 +31,6 @@ export default function Userloginpage() {
               <input
                 type="text"
                 className="w-full px-4 py-2 rounded bg-white text-black outline-none"
-                placeholder="Enter email or phone"
               />
             </div>
             <div>
@@ -39,7 +38,6 @@ export default function Userloginpage() {
               <input
                 type="password"
                 className="w-full px-4 py-2 rounded bg-white text-black outline-none"
-                placeholder="Enter password"
               />
               <a href="#" className="text-xs text-right block mt-1 text-white hover:underline">
                 Forget Password?
@@ -53,7 +51,7 @@ export default function Userloginpage() {
             </button>
           </form>
           <p className="text-sm mt-4 text-center">
-            Don't have an account? <a href="#" className="text-cyan-200 underline">Sign Up for Free</a>
+            Don't have an account? <a href="#" className="text-cyan-400 underline">Sign Up for Free</a>
           </p>
         </div>
       </div>
