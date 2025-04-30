@@ -16,15 +16,26 @@ export default function Forgotpassword() {
         email,
       });
 
-      toast.success('OTP sent successfully!');
-      router.push('/verifyotp');
+      // Store email in localStorage (consider using cookies for production)
+      localStorage.setItem("email", email);
+
+      // Check if the response status is 200 (indicating success)
+      if (res.status === 200) {
+        toast.success('OTP sent successfully!');
+        router.push('/verifyotp'); // Redirect to OTP verification page
+      } else {
+        toast.error('Failed to send OTP. Please try again.');
+      }
     } catch (error) {
       console.error('Error sending OTP:', error);
+
+      // Display error message from the backend response or a generic error message
       toast.error(
         error?.response?.data?.message || 'Failed to send OTP. Please try again.'
       );
     }
   };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[url('/loginbg.png')] bg-cover bg-center relative">

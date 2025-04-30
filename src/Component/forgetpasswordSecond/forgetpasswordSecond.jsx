@@ -1,16 +1,25 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import toast, { Toaster } from 'react-hot-toast';
+import axios from 'axios';
 
 export default function PasswordResetForm() {
   const [otp, setOtp] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-
+  const [email, setEmail] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const handleSubmit = () => {
+  // Move useEffect here to set the email on component mount
+  useEffect(() => {
+    const storedEmail = localStorage.getItem("email");
+    if (storedEmail) {
+      setEmail(storedEmail); // Set email from localStorage
+    }
+  }, []);
+
+  const handleSubmit = async () => {
     if (!otp || !password || !confirmPassword) {
       toast.error('Please fill all the fields');
       return;
@@ -36,13 +45,30 @@ export default function PasswordResetForm() {
       return;
     }
 
-    console.log({ otp, password, confirmPassword });
-    toast.success('Password successfully updated!');
+    try {
+      // Make an API call to your backend to verify OTP and change password
+      const response = await axios.post('http://localhost:4000/api/forgotpassword/verify-otp', {
+        email: email,  // You should pass the actual user's email here
+        otp: otp,
+        newPassword: password,
+      });
 
-    // Clear fields after submission
-    setOtp('');
-    setPassword('');
-    setConfirmPassword('');
+      // If the response is successful
+      toast.success('Password successfully updated!');
+      console.log(response.data);
+
+      // Clear fields after submission
+      setOtp('');
+      setPassword('');
+      setConfirmPassword('');
+
+      // Optionally, redirect the user to a login page or another relevant page
+      // router.push('/login'); // Add this line if using next.js router or similar routing
+    } catch (error) {
+      // If there's an error in the API request
+      toast.error('Error updating password. Please try again later.');
+      console.error('Error updating password:', error);
+    }
   };
 
   return (
