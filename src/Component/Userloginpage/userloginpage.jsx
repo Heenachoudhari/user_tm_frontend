@@ -1,59 +1,76 @@
+'use client'
 export default function Userloginpage() {
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-gray-100">
-      <div className="flex w-full max-w-6xl h-full md:h-[90vh] shadow-lg rounded-lg overflow-hidden">
-        
-        {/* Left Panel */}
-        <div className="w-1/2 bg-cyan-200 p-8 flex flex-col justify-center items-center relative">
-          <div className="absolute left-0 top-0 w-0 h-0 border-l-[100px] border-l-transparent border-t-[100px] border-t-cyan-700"></div>
-          <img
-            src="https://cdn-icons-png.flaticon.com/512/5969/5969034.png"
-            alt="Task Manager Icon"
-            className="w-16 h-16 mb-4"
-          />
-          <h2 className="text-xl font-bold mb-2">TASK MANAGER</h2>
-          <img
-            src="https://cdn-icons-png.flaticon.com/512/3209/3209265.png"
-            alt="Illustration"
-            className="w-40 h-40 mb-4"
-          />
-          <p className="text-sm text-gray-700 text-center px-4">
-            A simple and intuitive task manager to organize, track, and prioritize your tasks.
-          </p>
-        </div>
+      <div className="flex w-full h-screen shadow-lg rounded-none overflow-hidden">
 
-        {/* Right Panel */}
-        <div className="w-1/2 bg-cyan-700 p-10 text-white flex flex-col justify-center">
-          <h2 className="text-2xl font-semibold mb-6 text-center">User Login</h2>
-          <form className="space-y-4">
-            <div>
-              <label className="block text-sm mb-1">E-mail / Phone</label>
-              <input
-                type="text"
-                className="w-full px-4 py-2 rounded bg-white text-black outline-none"
-              />
-            </div>
-            <div>
-              <label className="block text-sm mb-1">Password</label>
-              <input
-                type="password"
-                className="w-full px-4 py-2 rounded bg-white text-black outline-none"
-              />
-              <a href="#" className="text-xs text-right block mt-1 text-white hover:underline">
-                Forget Password?
-              </a>
-            </div>
-            <button
-              type="submit"
-              className="w-full py-2 bg-cyan-400 hover:bg-cyan-500 text-black font-bold rounded"
-            >
-              Login
-            </button>
-          </form>
-          <p className="text-sm mt-4 text-center">
-            Don't have an account? <a href="#" className="text-cyan-400 underline">Sign Up for Free</a>
-          </p>
-        </div>
+        {/* Left Panel with local background image */}
+        <div className="w-1/2 h-full bg-[url('/loginbg1.png')] bg-cover bg-center p-8 flex flex-col justify-center items-center relative">
+          <div className="absolute left-0 top-0 w-0 h-0 border-l-[100px] border-l-transparent "></div>
+          <img
+            src="/logo.png"
+            alt="Task Manager Icon"
+            className="w-60 h-60 "
+          />
+          <h1 className="pt-1 text-4xl font-bold text-black mb-4">Welcome Back!</h1>
+          <img
+      src="/logimage.png"
+      alt="Illustration"
+      className="w-119 h-80 mb-5" // Increased from w-40 h-40 to w-60 h-60
+      />
+
+<p className="text-2xl text-black text-center px-4 rounded">
+  A simple and intuitive task manager to organize,<br />
+  track, and prioritize your tasks.
+</p>
+</div>
+
+        {/* Right Panel with local background image */}
+        <div className="w-1/2 h-full bg-[url('/loginbg2.png')] bg-cover bg-center p-10 text-white flex flex-col backdrop-brightness-75">
+  <div className="mt-10"> {/* Push content down slightly from the top */}
+    <h1 className="text-3xl font-semibold mb-20 text-center margin top-3">User Login</h1>
+    <form className="space-y-4">
+      <div>
+        <label className="block text-1xl mb-1">E-mail / Phone</label>
+        <input
+          type="text"
+          placeholder="Enter your email or phone"
+          className="w-full px-4 py-3 rounded-lg bg-white text-gray-500 outline-none"
+        />
+      </div>
+      <div>
+        <label className="block text-1xl mb-1">Password</label>
+        <input
+  type="text"                 // Use "text" to control input behavior
+  placeholder="Enter 8-digit password"
+  required
+  pattern="\d{8}"
+  maxLength={8}
+  inputMode="numeric"         // Mobile-friendly numeric keyboard
+  onInput={(e) => {
+    e.target.value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+  }}
+  className="w-full px-4 py-3 rounded-lg bg-white text-gray-500 outline-none"
+/>
+
+<a href="#" className="text-md text-right block mt-1 text-cyan-200 hover:underline">
+          Forget Password?
+        </a>
+      </div>
+      <button
+  type="submit"
+  className="w-full py-3 bg-cyan-400 hover:bg-cyan-500 text-black font-semibold rounded-lg text-1xl cursor-pointer"
+>
+  Login
+</button>
+
+    </form>
+    <p className="text-1xl mt-4 text-center">
+      Don't have an account? <a href="#" className="text-cyan-200 text-1xl">Sign Up for Free</a>
+    </p>
+  </div>
+</div>
+
       </div>
     </div>
   );
