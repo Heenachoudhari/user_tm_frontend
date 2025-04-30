@@ -21,6 +21,16 @@ export default function PasswordResetForm() {
       return;
     }
 
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+    if (!passwordRegex.test(password)) {
+      toast.error(
+        'Password must be at least 8 characters and include uppercase, lowercase, number, and special character'
+      );
+      return;
+    }
+
     if (password !== confirmPassword) {
       toast.error('Passwords do not match');
       return;
@@ -47,7 +57,7 @@ export default function PasswordResetForm() {
       <div className="absolute left-0 bottom-1/4 w-24 h-24 bg-teal-800 opacity-20 transform rotate-45 -translate-x-8"></div>
 
       <div className="w-full max-w-3xl bg-white rounded-lg p-8 shadow-lg z-10">
-        <h1 className="text-3xl font-bold text-center text-[#018ABE] mb-4">Forgot Password</h1>
+        <h1 className="text-3xl font-bold text-center text-[#018ABE] mb-4">Forget Password</h1>
         <h2 className="text-2xl font-extrabold text-center text-gray-900 mb-6">Request OTP</h2>
 
         <div className="pr-40 pl-40">
