@@ -9,7 +9,7 @@ export default function Home() {
   
     <div>
       {/* Desktop view (hidden on mobile) */}
-      <div className="hidden md:block">
+      <div className="block">
        <Signup/>
       </div>
 

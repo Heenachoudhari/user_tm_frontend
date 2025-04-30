@@ -2,6 +2,8 @@
 
 import { Toaster, toast } from 'react-hot-toast';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation'; // Import useRouter
+import Image from 'next/image'; // Import Image from next/image
 
 export default function Signup() {
   const [formData, setFormData] = useState({
@@ -13,8 +15,9 @@ export default function Signup() {
     confirmPassword: '',
   });
 
-  const [validationMessage, setValidationMessage] = useState(''); // Initialize validation message state
-  const [isSubmitting, setIsSubmitting] = useState(false); // Add submitting state to prevent multiple submissions
+  const [validationMessage, setValidationMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter(); // Initialize useRouter
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -22,28 +25,36 @@ export default function Signup() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (isSubmitting) return; // If already submitting, prevent form submission again
+    if (isSubmitting) return;
 
-    setIsSubmitting(true); // Set submitting to true to prevent multiple submissions
+    setIsSubmitting(true);
 
     // Password length validation
     if (formData.password.length !== 8) {
       setValidationMessage('Password must be exactly 8 characters long.');
-      setIsSubmitting(false); // Reset submitting state
+      setIsSubmitting(false);
       return;
     }
 
     // Password match validation
     if (formData.password !== formData.confirmPassword) {
       toast.error('Passwords do not match');
-      setIsSubmitting(false); // Reset submitting state
+      setIsSubmitting(false);
       return;
     }
 
     // Simulate form submission
     toast.success('Registered successfully!');
     console.log(formData); // You can send this to your backend
+
+    // Navigate to the login page after successful registration
+    router.push('/'); // Redirect to the login page
+
     setIsSubmitting(false); // Reset submitting state after success
+  };
+
+  const navigateToLogin = () => {
+    router.push('/'); // Navigate to login page on image click
   };
 
   return (
@@ -55,8 +66,20 @@ export default function Signup() {
         style={{ backgroundImage: "url('/signup/bgleft1.png')" }}
       >
         <div className="flex flex-col items-center gap-1">
-          <img src="/signup/tasklogo.png" alt="Image 2" className="w-90 h-auto" />
-          <img src="/signup/image1.png" alt="Image 3" className="w-100 -mt-20 h-auto" />
+          {/* Use the Image component for the logo */}
+          <Image 
+            src="/signup/tasklogo.png" 
+            alt="Logo" 
+            width={200} 
+            height={50} 
+          />
+          <Image 
+            src="/signup/image1.png" 
+            alt="Background Image"
+            width={300}
+            height={150} 
+            className="w-100 -mt-20 h-auto" 
+          />
         </div>
       </div>
 
@@ -170,6 +193,15 @@ export default function Signup() {
               >
                 Sign Up
               </button>
+              <p>
+                Already have an account? 
+                <span 
+                  className="text-cyan-200 cursor-pointer" 
+                  onClick={navigateToLogin}
+                >
+                  Login
+                </span>
+              </p>
             </div>
           </form>
         </div>
