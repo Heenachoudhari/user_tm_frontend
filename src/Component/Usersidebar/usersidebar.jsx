@@ -16,7 +16,7 @@ const menuItems = [
 
 export default function Sidebar() {
   return (
-    <div className="min-h-screen w-60 bg-gradient-to-b from-[#018ABE] via-[#65B7D4] to-[#E0E2E3] text-white flex flex-col items-center py-6">
+    <div className="min-h-screen w-80 bg-gradient-to-b from-[#018ABE] via-[#65B7D4] to-[#E0E2E3] text-white flex flex-col items-center py-6">
 
       {/* Logo */}
       <div className="flex justify-center mb-3">
@@ -40,7 +40,7 @@ export default function Sidebar() {
             <div className="w-6 h-6 flex items-center justify-center">
               <Image src={item.img} alt={item.label} width={24} height={24} />
             </div>
-            <span className="text-sm font-medium">{item.label}</span>
+            <span className="text-md font-medium">{item.label}</span>
           </Link>
         ))}
       </nav>
