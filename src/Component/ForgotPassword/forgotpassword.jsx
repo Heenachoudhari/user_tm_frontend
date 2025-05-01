@@ -2,12 +2,15 @@
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import Cookies from 'js-cookie';
 import Image from 'next/image';
 
 export default function Forgotpassword() {
   const router = useRouter();
   const [email, setEmail] = useState('');
+  const [isResendDisabled, setIsResendDisabled] = useState(false);
+  const [timer, setTimer] = useState(60);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,6 +42,8 @@ export default function Forgotpassword() {
       return;
     }
 
+    if (isResendDisabled) return;
+
     try {
       const res = await axios.post('http://localhost:4000/api/forgotpassword/generate-otp', {
         email,
@@ -46,6 +51,12 @@ export default function Forgotpassword() {
 
       if (res.status === 200) {
         toast.success('OTP resent successfully!');
+        setIsResendDisabled(true);
+        setTimer(60);
+
+        const expiryTimestamp = Date.now() + 60 * 1000;
+        Cookies.set('otp-timer-timestamp', expiryTimestamp.toString(), { expires: 1 / 24 }); // expires in 1 hour
+        Cookies.set('otp-email', email, { expires: 1 / 24 });
       } else {
         toast.error('Failed to resend OTP.');
       }
@@ -57,10 +68,49 @@ export default function Forgotpassword() {
     }
   };
 
+  useEffect(() => {
+    const savedTimestamp = Cookies.get('otp-timer-timestamp');
+    const savedEmail = Cookies.get('otp-email');
+
+    if (savedTimestamp && savedEmail) {
+      const now = Date.now();
+      const remaining = Math.floor((Number(savedTimestamp) - now) / 1000);
+
+      if (remaining > 0) {
+        setEmail(savedEmail);
+        setIsResendDisabled(true);
+        setTimer(remaining);
+      } else {
+        Cookies.remove('otp-timer-timestamp');
+        Cookies.remove('otp-email');
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    let interval;
+    if (isResendDisabled && timer > 0) {
+      interval = setInterval(() => {
+        setTimer((prev) => {
+          if (prev === 1) {
+            clearInterval(interval);
+            setIsResendDisabled(false);
+            Cookies.remove('otp-timer-timestamp');
+            Cookies.remove('otp-email');
+            return 60;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isResendDisabled, timer]);
+
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-[url('/loginbg.png')] bg-cover bg-center relative">
       <div className="relative bg-white rounded-lg shadow-lg p-12 w-full max-w-3xl z-10 h-120 text-center">
-      <Image src="/image2.png" alt ="vector" height={100} width={100} className="absolute top-204.71px left-432.82px rotation-160.01 deg z-0 "/>
+        <Image src="/image2.png" alt="vector" height={100} width={100} className="absolute top-204.71px left-432.82px rotation-160.01 deg z-0 " />
         <Image src="/image1.png" alt="vector" height={70} width={60} className="absolute top-15 right-10 z-0" />
         <Image src="/image8.png" alt="vector" height={80} width={80} className="absolute top-50 left-5 rotate-[350deg] z-[-1]" />
         <Image src="/image3.png" alt="vector" height={80} width={80} className="absolute bottom-14 left-25 right-30 rotate-[350deg] z-0" />
@@ -93,9 +143,11 @@ export default function Forgotpassword() {
               <button
                 type="button"
                 onClick={handleResend}
-                className="absolute leading-10 cursor-pointer right-25 top-10 text-lg  text-black hover:text-blue-600 z-10"
+                disabled={isResendDisabled}
+                className={`absolute leading-10 cursor-pointer right-25 top-10 text-lg z-10 ${isResendDisabled ? "text-gray-400 cursor-not-allowed" : "text-black hover:text-blue-600"
+                  }`}
               >
-                Resend OTP?
+                {isResendDisabled ? `Resend in ${timer}s` : "Resend OTP?"}
               </button>
             </div>
           </div>
