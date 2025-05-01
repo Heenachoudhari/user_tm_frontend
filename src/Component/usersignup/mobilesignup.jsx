@@ -39,7 +39,7 @@ export default function MobileSignup() {
       <div className=" w-full flex flex-col items-center justify-center bg-cover bg-center px-4">
         <h2 className="text-2xl font-bold text-white mb-6 mt-6">Create an Account</h2>
 
-        <div className="bg-cyan-50 p-6 md:p-8 rounded-2xl shadow-xl w-full max-w-md">
+        <div className="bg-white p-6 md:p-8 rounded-2xl shadow-xl w-full max-w-md">
           <form className="grid grid-cols-1 gap-4" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="firstName" className="block text-gray-900 mb-1">First Name</label>

@@ -1,9 +1,9 @@
-'use client';
-
-import { Toaster, toast } from 'react-hot-toast';
+"use client";
 import { useState } from 'react';
-import { useRouter } from 'next/navigation'; // Import useRouter
-import Image from 'next/image'; // Import Image from next/image
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import toast from 'react-hot-toast';
 
 export default function Signup() {
   const [formData, setFormData] = useState({
@@ -17,194 +17,184 @@ export default function Signup() {
 
   const [validationMessage, setValidationMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const router = useRouter(); // Initialize useRouter
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
+  const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+  const router = useRouter();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setValidationMessage('');
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (isSubmitting) return;
 
     setIsSubmitting(true);
 
-    // Password length validation
+    // Form validation
     if (formData.password.length !== 8) {
+      setPasswordError(true);
       setValidationMessage('Password must be exactly 8 characters long.');
       setIsSubmitting(false);
       return;
+    } else {
+      setPasswordError(false);
     }
 
-    // Password match validation
     if (formData.password !== formData.confirmPassword) {
-      toast.error('Passwords do not match');
+      setConfirmPasswordError(true);
+      setValidationMessage('Passwords do not match.');
+      setIsSubmitting(false);
+      return;
+    } else {
+      setConfirmPasswordError(false);
+    }
+
+    const phoneRegex = /^[0-9]{10}$/;
+    if (!phoneRegex.test(formData.phone)) {
+      setValidationMessage('Please enter a valid 10-digit phone number.');
       setIsSubmitting(false);
       return;
     }
 
-    // Simulate form submission
+    // Successful registration
     toast.success('Registered successfully!');
-    console.log(formData); // You can send this to your backend
-
-    // Navigate to the login page after successful registration
-    router.push('/'); // Redirect to the login page
-
-    setIsSubmitting(false); // Reset submitting state after success
-  };
-
-  const navigateToLogin = () => {
-    router.push('/'); // Navigate to login page on image click
+    console.log('Registered:', formData);
+    router.push('/'); // Redirect to login page
+    setFormData({ firstName: '', lastName: '', email: '', phone: '', password: '', confirmPassword: '' }); // Reset form
+    setIsSubmitting(false);
   };
 
   return (
     <div className="flex flex-row h-screen">
-      
       {/* Left Side */}
       <div
         className="w-2/5 h-full bg-cover bg-center relative flex items-center justify-center"
         style={{ backgroundImage: "url('/signup/bgleft1.png')" }}
       >
         <div className="flex flex-col items-center gap-1">
-          {/* Use the Image component for the logo */}
-          <Image 
-            src="/signup/tasklogo.png" 
-            alt="Logo" 
-            width={200} 
-            height={50} 
-          />
-          <Image 
-            src="/signup/image1.png" 
-            alt="Background Image"
-            width={300}
-            height={150} 
-            className="w-100 -mt-20 h-auto" 
-          />
+          <Image src="/signup/tasklogo.png" alt="Logo" width={300} height={150} />
+          <Image src="/signup/image1.png" alt="Image" width={300} height={150} className="-mt-20" />
         </div>
       </div>
 
       {/* Right Side */}
       <div
-        className="w-3/5 flex flex-col items-center justify-center bg-cover bg-center relative px-4"
-        style={{ backgroundImage: "url('/signup/bgright.png')" }}
+        className="w-3/5 flex flex-col items-center justify-center bg-white bg-cover bg-center relative px-4"
+        
       >
-        <h2 className="text-3xl font-bold text-white mb-6 mt-0">
-          Create an Account
-        </h2>
+        <h2 className="text-3xl font-bold text-black mb-6 mt-0">Create an Account</h2>
 
-        <div className="bg-cyan-50 p-8 rounded-2xl shadow-xl w-full max-w-xl">
+        <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-xl">
           <form className="grid grid-cols-2 gap-4" onSubmit={handleSubmit}>
-            <div>
-              <label htmlFor="firstName" className=" text-gray-900 mb-1">First Name</label>
-              <input
-                type="text"
-                name="firstName"
-                id="firstName"
-                placeholder="Enter your first name"
-                className="w-full p-3 rounded-xl border border-gray-500 focus:outline-none bg-white text-black"
-                required
-                value={formData.firstName}
-                onChange={handleChange}
-              />
-            </div>
+            <InputField label="First Name" name="firstName" value={formData.firstName} handleChange={handleChange} />
+            <InputField label="Last Name" name="lastName" value={formData.lastName} handleChange={handleChange} />
+            <InputField label="E-mail" name="email" type="email" value={formData.email} handleChange={handleChange} />
+            <InputField
+              label="Phone"
+              name="phone"
+              type="tel"
+              pattern="[0-9]{10}"
+              value={formData.phone}
+              handleChange={handleChange}
+            />
 
-            <div>
-              <label htmlFor="lastName" className=" text-gray-900 mb-1">Last Name</label>
-              <input
-                type="text"
-                name="lastName"
-                id="lastName"
-                placeholder="Enter your last name"
-                className="w-full p-3 rounded-xl border border-gray-500 focus:outline-none bg-white text-black"
-                required
-                value={formData.lastName}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div>
-              <label htmlFor="email" className=" text-gray-900 mb-1">E-mail</label>
-              <input
-                type="email"
-                name="email"
-                id="email"
-                placeholder="Enter your email"
-                className="w-full p-3 rounded-xl border border-gray-500 focus:outline-none bg-white text-black"
-                required
-                value={formData.email}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div>
-              <label htmlFor="phone" className=" text-gray-900 mb-1">Phone</label>
-              <input
-                type="tel"
-                name="phone"
-                id="phone"
-                placeholder="Enter your phone number"
-                className="w-full p-3 rounded-xl border border-gray-500 focus:outline-none bg-white text-black"
-                pattern="[0-9]{10}"
-                required
-                value={formData.phone}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div>
-              <label htmlFor="password" className=" text-gray-900 mb-1">Password</label>
-              <input
-                type="password"
-                name="password"
-                id="password"
-                placeholder="Enter your password"
-                className="w-full p-3 rounded-xl border border-gray-500 focus:outline-none bg-white text-black"
-                required
-                value={formData.password}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div>
-              <label htmlFor="confirmPassword" className=" text-gray-900 mb-1">Confirm Password</label>
-              <input
-                type="password"
-                name="confirmPassword"
-                id="confirmPassword"
-                placeholder="Re-enter your password"
-                className="w-full p-3 rounded-xl border border-gray-500 focus:outline-none bg-white text-black"
-                required
-                value={formData.confirmPassword}
-                onChange={handleChange}
-              />
-            </div>
+            <PasswordField
+              label="Password"
+              name="password"
+              value={formData.password}
+              handleChange={handleChange}
+              show={showPassword}
+              toggle={() => setShowPassword(!showPassword)}
+              error={passwordError}
+            />
+            <PasswordField
+              label="Confirm Password"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              handleChange={handleChange}
+              show={showConfirmPassword}
+              toggle={() => setShowConfirmPassword(!showConfirmPassword)}
+              error={confirmPasswordError}
+            />
 
             {validationMessage && (
-              <div className="col-span-2 text-red-500 text-center mt-2">
-                {validationMessage}
-              </div>
+              <div className="col-span-2 text-red-600 text-center text-sm">{validationMessage}</div>
             )}
 
             <div className="col-span-2">
               <button
                 type="submit"
                 className="w-full py-3 rounded-xl bg-cyan-300 hover:bg-cyan-400 text-black font-bold mt-2 cursor-pointer"
-                disabled={isSubmitting} // Disable button while submitting
+                disabled={isSubmitting}
               >
-                Sign Up
+                {isSubmitting ? 'Signing Up...' : 'Sign Up'}
               </button>
-              <p>
-                Already have an account? 
-                <span 
-                  className="text-cyan-200 cursor-pointer" 
-                  onClick={navigateToLogin}
+            </div>
+
+            <div className="col-span-2 text-center mt-2">
+              <p className="text-sm text-gray-700">
+                Already have an account?{' '}
+                <span
+                  onClick={() => router.push('/')}
+                  className="text-blue-600 font-medium cursor-pointer hover:underline"
                 >
-                  Login
+                  Login here
                 </span>
               </p>
             </div>
           </form>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function InputField({ label, name, type = 'text', value, handleChange, pattern }) {
+  return (
+    <div>
+      <label htmlFor={name} className="text-gray-900 mb-1 block">
+        {label}
+      </label>
+      <input
+        type={type}
+        name={name}
+        id={name}
+        pattern={pattern}
+        placeholder={`Enter your ${label.toLowerCase()}`}
+        className="w-full p-3 rounded-xl shadow-md focus:border-blue-500 focus:outline-none bg-white text-black"
+        required
+        value={value}
+        onChange={handleChange}
+      />
+    </div>
+  );
+}
+
+function PasswordField({ label, name, value, handleChange, show, toggle, error }) {
+  return (
+    <div className="relative">
+      <label htmlFor={name} className="text-gray-900 mb-1 block">
+        {label}
+      </label>
+      <input
+        type={show ? 'text' : 'password'}
+        name={name}
+        id={name}
+        placeholder={`Enter your ${label.toLowerCase()}`}
+        className={`w-full p-3 pr-10 rounded-xl shadow-md focus:border-blue-500 focus:outline-none ${error ? 'bg-purple-200' : 'bg-white'} text-black`}
+        required
+        value={value}
+        onChange={handleChange}
+      />
+      <div
+        className="absolute right-3 top-[42px] text-gray-500 cursor-pointer"
+        onClick={toggle}
+      >
+        {show ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
       </div>
     </div>
   );
