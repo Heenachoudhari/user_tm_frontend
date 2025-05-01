@@ -16,20 +16,31 @@ const menuItems = [
 
 export default function Sidebar() {
   return (
-    <div className="min-h-screen w-60 bg-gradient-to-b from-sky-700 to-sky-400 text-white flex flex-col items-center py-6">
-      
+    <div className="min-h-screen w-60 bg-gradient-to-b from-[#018ABE] via-[#65B7D4] to-[#E0E2E3] text-white flex flex-col items-center py-6">
+
       {/* Logo */}
-      <div className="text-center">
-        <Image src="/task.png" alt="Logo" width={200} height={300} />
-       
+      <div className="flex justify-center mb-3">
+        <Image 
+          src="/task.png" 
+          alt="Logo" 
+          width={120} 
+          height={120} 
+          className="object-contain" 
+        />
       </div>
 
       {/* Menu */}
-      <nav className="flex flex-col gap-4 w-full px-4">
+      <nav className="flex flex-col gap-2 w-full px-4">
         {menuItems.map((item, index) => (
-          <Link key={index} href={item.href} className="flex items-center gap-3 p-2 hover:bg-white hover:text-sky-700 rounded-lg transition">
-            <Image src={item.img} alt={item.label} width={30} height={30} />
-            <span className="text-md">{item.label}</span>
+          <Link
+            key={index}
+            href={item.href}
+            className="flex items-center gap-4 px-3 py-2 hover:bg-white hover:text-sky-700 rounded-lg transition duration-200"
+          >
+            <div className="w-6 h-6 flex items-center justify-center">
+              <Image src={item.img} alt={item.label} width={24} height={24} />
+            </div>
+            <span className="text-sm font-medium">{item.label}</span>
           </Link>
         ))}
       </nav>

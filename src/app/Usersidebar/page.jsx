@@ -1,10 +1,12 @@
-import Usersidebar from '@/Component/Usersidebar/usersidebar'
+'use client';
 import React from 'react'
+import Sidebar from '@/Component/Usersidebar/usersidebar';
 
-export default function () {
+export default function Page() {
   return (
     <div>
-        <Usersidebar/>
+      <Sidebar/>
     </div>
-  )
+  );
 }
+
