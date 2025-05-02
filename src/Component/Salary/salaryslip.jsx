@@ -1,127 +1,120 @@
-'use client';
-// components/SalarySlip.jsx
-import { useRef } from "react";
-import html2pdf from "html2pdf.js";
+import React from 'react';
 
-const SalarySlip = ({ employee }) => {
-    const slipRef = useRef();
-
-    const downloadPDF = () => {
-        const element = slipRef.current;
-        const opt = {
-            margin: 0.5,
-            filename: `${employee.name.replace(/\s+/g, '_')}_SalarySlip.pdf`,
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2 },
-            jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-        };
-        html2pdf().set(opt).from(element).save();
-    };
-
+export default function SalarySlipPage() {
     return (
-        <>
-            <div className="text-right max-w-4xl mx-auto mt-4">
-                <button
-                    onClick={downloadPDF}
-                    className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded mb-2"
-                >
-                    Download PDF
-                </button>
-            </div>
-
-            <div
-                ref={slipRef}
-                id="salary-slip"
-                className="p-8 bg-white text-black max-w-4xl mx-auto shadow-md relative"
-            >
-                {/* Watermark */}
-                <img
-                    src="/watermark.png"
-                    alt="Watermark"
-                    className="absolute opacity-10 top-1/3 left-1/4 w-1/2 pointer-events-none"
-                />
-
-                {/* Header */}
-                <div className="flex justify-between items-center border-b pb-4">
-                    <img src="/logo.png" alt="Logo" className="h-16" />
-                    <p className="text-sm text-right">
-                        Office No. B1A & 2, New White House, Buddha Colony,<br />
-                        Kurla West, Mumbai, Maharashtra, 400070
-                    </p>
-                </div>
-
-                <h2 className="text-xl font-bold my-4">
-                    Salary Slip ({employee.dateRange})
-                </h2>
-
-                {/* Employee Info */}
-                <div className="grid grid-cols-3 gap-4 border p-4 mb-4 text-sm">
-                    <p><strong>{employee.name}</strong></p>
-                    <p><strong>Phone No:</strong> {employee.phone}</p>
-                    <p><strong>Monthly Gross Salary:</strong> ₹{employee.salary}</p>
-                    <p><strong>Emp ID:</strong> {employee.empId}</p>
-                    <p><strong>Account No:</strong> {employee.accountNo}</p>
-                </div>
-
-                {/* Payment */}
-                <h3 className="font-semibold text-base mb-1">
-                    Payment & Salary ({employee.dateRange})
-                </h3>
-                <div className="border p-4 mb-4">
-                    <p><strong>Net Payable (Earnings):</strong> ₹{employee.netPayable}</p>
-                </div>
-
-                {/* Attendance Summary */}
-                <h3 className="font-semibold text-base mb-1">
-                    Attendance Summary ({employee.dateRange})
-                </h3>
-                <div className="border p-4 text-sm">
-                    <div className="grid grid-cols-4 gap-2 mb-2">
-                        <p>Present - {employee.present}</p>
-                        <p>Absent - {employee.absent}</p>
-                        <p>Half Day - {employee.halfDay}</p>
-                        <p>Not Marked - {employee.notMarked}</p>
-                        <p>Overtime - {employee.overtime}</p>
-                        <p>Fine - {employee.fine}</p>
-                        <p>Leaves - {employee.leaves}</p>
-                        <p>Payable Days - {employee.payableDays}</p>
-                    </div>
-                    <table className="w-full text-center border mt-4">
-                        <thead>
-                            <tr className="border">
-                                {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
-                                    <th key={day} className="border px-2 py-1">{day}</th>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                {employee.attendance.map((val, i) => (
-                                    <td key={i} className="border px-2 py-1">{val}</td>
-                                ))}
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div className="flex flex-wrap text-xs mt-3 gap-3">
-                        <p><b>P</b> Present</p>
-                        <p><b>A</b> Absent</p>
-                        <p><b>HD</b> Half Day</p>
-                        <p><b>WO</b> Weekly Off</p>
-                        <p><b>PCO</b> Present (Comp Off)</p>
-                        <p><b>HDCO</b> Half Day (Comp Off)</p>
-                        <p><b>L</b> Leave</p>
-                        <p><b>H</b> Holiday</p>
-                    </div>
-                </div>
-
-                {/* Signature */}
-                <div className="mt-8 text-right">
-                    <img src="/signature.png" alt="Signature" className="h-12 inline-block" />
-                    <p className="text-sm">Authorized Signature</p>
+        <div className="max-w-4xl mx-auto p-8 bg-white shadow-lg border rounded-lg mt-10 font-sans text-sm">
+            <div className="mb-6">
+                <div className="text-sm font-bold bg-orange-200 p-2">Salary Slip</div>
+                <div className="mt-2">
+                    <p className="font-semibold">ISRC</p>
+                    <p>Kurla, Mumbai</p>
+                    <p>iscr.orgin.com | 8976104646</p>
                 </div>
             </div>
-        </>
+
+            <div className="flex justify-center items-center border-b pb-4">
+                <p>PaySlip for the Month of September 2025</p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-8 py-8">
+                {/* Employee Summary Left */}
+                <div>
+                    <h2 className="text-xl font-bold mb-2">Employee Pay Summary</h2>
+                    <p><strong>Employee Name:</strong> Prashant Patil</p>
+                    <p><strong>Designation:</strong> Salesman</p>
+                    <p><strong>Date of Joining:</strong> 8-May-2020</p>
+                    <p><strong>Pay Period:</strong> September 2025</p>
+                    <p><strong>Pay Date:</strong> 30-Sep-2025</p>
+                    <p><strong>Account #:</strong> 000-0000-4255</p>
+                    <p><strong>Location:</strong> Ghansoli</p>
+                </div>
+
+                {/* Net Pay Summary Right */}
+                <div className="bg-green-100 border border-green-400 text-center rounded-lg px-4 py-2 self-start">
+                    <p className="text-xs font-semibold">Employee Net Pay</p>
+                    <p className="text-2xl font-bold text-green-600">₹5,213.95</p>
+                    <p className="text-sm">Paid Days: 30</p>
+                </div>
+            </div>
+
+            {/* Headers Row */}
+            <div className="grid grid-cols-4 bg-orange-100 font-semibold text-center">
+                <div>EARNINGS</div>
+                <div>AMOUNT</div>
+                <div>DEDUCTIONS</div>
+                <div>AMOUNT</div>
+            </div>
+
+            <div className="grid grid-cols-4 gap-x-6 gap-y-1 text-sm">
+                <div className="space-y-1">
+                    <p>Basic Salary</p>
+                    <p>House Rent Allowance</p>
+                    <p>Conveyance</p>
+                    <p>Medical</p>
+                    <p>Special Allowance</p>
+                    <p>Other</p>
+                    <p className="font-semibold border-t pt-2">Gross Salary</p>
+                </div>
+                <div className="space-y-1">
+                    <p>₹5,600.00</p>
+                    <p>₹200.00</p>
+                    <p>₹150.00</p>
+                    <p>₹150.00</p>
+                    <p>₹300.00</p>
+                    <p>₹10.00</p>
+                    <p className="font-semibold border-t pt-2">₹6,432.50</p>
+                </div>
+                <div className="space-y-1">
+                    <p>EPF</p>
+                    <p>Health Insurance</p>
+                    <p>Professional Tax</p>
+                    <p>TDS</p>
+                    <p className="font-semibold border-t pt-2">Total Deductions</p>
+                </div>
+                <div className="space-y-1">
+                    <p>₹800.00</p>
+                    <p>₹356.36</p>
+                    <p>₹62.55</p>
+                    <p>₹0.00</p>
+                    <p className="font-semibold border-t pt-2">₹1,218.55</p>
+                </div>
+            </div>
+
+            {/* Net Pay */}
+            <div className="mt-6">
+                <h3 className="font-semibold">NET PAY</h3>
+                <p className="text-xl font-bold text-green-600">₹5,213</p>
+                <p className="text-sm italic">Amount in Words: Five Thousand Two Hundred and Thirteen Dollar & 95/100</p>
+            </div>
+
+            {/* Reimbursements */}
+            <div className="grid grid-cols-4 bg-orange-100 font-semibold text-center mt-6 mb-2">
+                <div>REIMBURSEMENTS</div>
+                <div>AMOUNT</div>
+                <div></div>
+                <div></div>
+            </div>
+
+            <div className="grid grid-cols-4 gap-x-6 gap-y-1 text-sm">
+                <div className="space-y-1">
+                    <p>Mobile Bill</p>
+                    <p>Travel</p>
+                    <p>Food</p>
+                    <p className="font-semibold border-t pt-2">Total Reimbursements</p>
+                </div>
+                <div className="space-y-1">
+                    <p>₹50.00</p>
+                    <p>₹30.00</p>
+                    <p>₹20.00</p>
+                    <p className="font-semibold border-t pt-2">₹100.00</p>
+                </div>
+            </div>
+
+            {/* Final Net Payable */}
+            <div className="bg-orange-100 mt-6 p-4 rounded-lg text-center">
+                <p className="text-xl font-bold text-orange-700">TOTAL NET PAYABLE: ₹5,313</p>
+                <p className="text-sm italic">(Five Thousand Three Hundred and Thirteen Ruppees)</p>
+            </div>
+        </div>
     );
-};
-
-export default SalarySlip;
+}

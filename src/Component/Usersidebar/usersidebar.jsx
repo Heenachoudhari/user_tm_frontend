@@ -16,7 +16,7 @@ const menuItems = [
 
 export default function Sidebar() {
   return (
-    <div className="min-h-screen w-80 bg-gradient-to-b from-[#018ABE] via-[#65B7D4] to-[#E0E2E3] text-white flex flex-col items-center py-6">
+    <div className="fixed min-h-screen w-[13.2rem] bg-gradient-to-b from-[#018ABE] via-[#65B7D4] to-[#E0E2E3] text-white flex flex-col items-center py-6">
 
       {/* Logo */}
       <div className="flex justify-center mb-3">

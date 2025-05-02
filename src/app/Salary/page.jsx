@@ -1,35 +1,39 @@
-// App.jsx
-import SalarySlip from "@/Component/Salary/salaryslip";
+
+import NavBar from "@/Component/Navbar/navbar";
+import SalarySlipPage from "@/Component/Salary/salaryslip";
+import Sidebar from "@/Component/Usersidebar/usersidebar";
 import React from "react";
 
-
-const dummyEmployee = {
-  name: "Paras Khairnar",
-  empId: "EMP1023",
-  phone: "9876543210",
-  salary: 50000,
-  accountNo: "1234567890123456",
-  dateRange: "April 2025",
-  netPayable: 48000,
-  present: 22,
-  absent: 2,
-  halfDay: 1,
-  notMarked: 0,
-  overtime: 4,
-  fine: 200,
-  leaves: 1,
-  payableDays: 26,
-  attendance: [
-    "P", "P", "A", "P", "HD", "P", "WO", 
-  ],
-};
-
-const App = () => {
+function page() {
   return (
-    <div className="bg-gray-100 min-h-screen py-10">
-      <SalarySlip employee={dummyEmployee} />
+    <div className="min-h-screen md:flex bg-white">
+
+      {/* Desktop Sidebar Section (visible on md+) */}
+      <div className="md:w-1/6 ">
+        <Sidebar />
+      </div>
+
+      {/* Main Content */}
+      <div className="w-full md:w-5/6 md:flex-1 h-screen bg-white">
+        {/* Desktop Navbar (hidden on mobile) */}
+        <NavBar />
+
+        {/* Page Content */}
+        <main className="hidden md:block">
+            <SalarySlipPage/>
+        </main>
+
+
+
+
+
+        {/* Mobile View */}
+        <main className="block md:hidden"></main>
+
+      </div>
+
     </div>
   );
-};
+}
 
-export default App;
+export default page;
