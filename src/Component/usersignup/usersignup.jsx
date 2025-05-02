@@ -86,9 +86,20 @@ export default function Signup() {
         className="w-3/5 flex flex-col items-center justify-center bg-white bg-cover bg-center relative px-4"
         
       >
+          <Image src="/vector2.png" alt="vector" width={60} height={60} className="absolute top-10 right-45 z-0" />
+  <Image src="/vector2.png" alt="vector" width={60} height={60} className="absolute bottom-10 left-100 rotate-300 " />
+  <Image src="/vector3.png" alt="vector" width={40} height={40} className="absolute top-1/2 left-22 " />
+  <Image src="/vector1.png" alt="vector" width={40} height={40} className="absolute top-17 left-20 " />
+  
+  <Image src="/vector3.png" alt="vector" width={40} height={40} className="absolute bottom-8 left-40" />
+  <Image src="/vector3.png" alt="vector" width={40} height={40} className="absolute bottom-8 right-40 scale-x-[-1]" />
+  <Image src="/vector3.png" alt="vector" width={40} height={40} className="absolute bottom-50 right-20 scale-x-[-1] 
+ " />
+  <Image src="/vector1.png" alt="vector" width={45} height={45} className="absolute top-70 right-23 scale-x-[-1] "  />
+
         <h2 className="text-3xl font-bold text-black mb-6 mt-0">Create an Account</h2>
 
-        <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-xl">
+        <div className="bg-white p-8 rounded-2xl  shadow-[1px_1px_10px_lightgray] w-full max-w-2xl z-10">
           <form className="grid grid-cols-2 gap-4" onSubmit={handleSubmit}>
             <InputField label="First Name" name="firstName" value={formData.firstName} handleChange={handleChange} />
             <InputField label="Last Name" name="lastName" value={formData.lastName} handleChange={handleChange} />
@@ -165,7 +176,7 @@ function InputField({ label, name, type = 'text', value, handleChange, pattern }
         id={name}
         pattern={pattern}
         placeholder={`Enter your ${label.toLowerCase()}`}
-        className="w-full p-3 rounded-xl shadow-md focus:border-blue-500 focus:outline-none bg-white text-black"
+        className="w-full p-3 rounded-xl shadow-[1px_1px_10px_lightgray] focus:border-blue-500 focus:outline-none bg-white text-black"
         required
         value={value}
         onChange={handleChange}
@@ -185,7 +196,7 @@ function PasswordField({ label, name, value, handleChange, show, toggle, error }
         name={name}
         id={name}
         placeholder={`Enter your ${label.toLowerCase()}`}
-        className={`w-full p-3 pr-10 rounded-xl shadow-md focus:border-blue-500 focus:outline-none ${error ? 'bg-purple-200' : 'bg-white'} text-black`}
+        className={`w-full p-3 pr-10 rounded-xl shadow-[1px_1px_10px_lightgray] focus:border-blue-500 focus:outline-none ${error ? 'bg-purple-200' : 'bg-white'} text-black`}
         required
         value={value}
         onChange={handleChange}
