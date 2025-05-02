@@ -1,4 +1,5 @@
-import Leave from "@/Component/Leave/leave";
+
+import LeaveTable from "@/Component/Leave/leavetable";
 import NavBar from "@/Component/Navbar/navbar";
 import Sidebar from "@/Component/Usersidebar/usersidebar";
 import React from "react";
@@ -17,7 +18,7 @@ function page() {
         {/* Desktop Navbar (hidden on mobile) */}
         <NavBar />
 <div>
-  <Leave/>
+  <LeaveTable/>
 </div>
       </div>
 
