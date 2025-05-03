@@ -147,7 +147,7 @@ export default function Timeline() {
   };
 
   const handleEditTimesheet = () => {
-    router.push("/edit-timesheet");
+    router.push("/edittimesheet");
   };
 
   const handleAddTask = () => {

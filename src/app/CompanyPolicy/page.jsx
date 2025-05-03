@@ -1,4 +1,4 @@
-import Companypolicy from "@/Component/Companypolicy/companypolicy";
+import Companypolicy from "@/Component/companypolicy/companypolicy";
 
 import NavBar from "@/Component/Navbar/navbar";
 import Sidebar from "@/Component/Usersidebar/usersidebar";

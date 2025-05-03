@@ -1,31 +1,32 @@
 "use client";
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 export default function Signup() {
+  const router = useRouter();
+
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    password: '',
-    confirmPassword: '',
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    password: "",
+    confirmPassword: "",
   });
 
-  const [validationMessage, setValidationMessage] = useState('');
+  const [validationMessage, setValidationMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
-  const router = useRouter();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setValidationMessage('');
+    setValidationMessage("");
   };
 
   const handleSubmit = async (e) => {
@@ -34,10 +35,9 @@ export default function Signup() {
 
     setIsSubmitting(true);
 
-    // Form validation
-    if (formData.password.length !== 8) {
+    if (formData.password.length < 8) {
       setPasswordError(true);
-      setValidationMessage('Password must be exactly 8 characters long.');
+      setValidationMessage("Password must be at least 8 characters long.");
       setIsSubmitting(false);
       return;
     } else {
@@ -46,28 +46,60 @@ export default function Signup() {
 
     if (formData.password !== formData.confirmPassword) {
       setConfirmPasswordError(true);
-      setValidationMessage('Passwords do not match.');
+      setValidationMessage("Passwords do not match.");
       setIsSubmitting(false);
       return;
     } else {
       setConfirmPasswordError(false);
     }
 
-    const phoneRegex = /^[0-9]{10}$/;
+    const phoneRegex = /^[789]\d{9}$/;
     if (!phoneRegex.test(formData.phone)) {
-      setValidationMessage('Please enter a valid 10-digit phone number.');
+      setValidationMessage("Please enter a valid 10-digit Indian phone number starting with 7, 8, or 9.");
       setIsSubmitting(false);
       return;
     }
 
-    // Successful registration
-    toast.success('Registered successfully!');
-    console.log('Registered:', formData);
-    router.push('/'); // Redirect to login page
-    setFormData({ firstName: '', lastName: '', email: '', phone: '', password: '', confirmPassword: '' }); // Reset form
+    try {
+      const response = await fetch("http://localhost:4000/api/user/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          phoneNumber: formData.phone,
+          password: formData.password,
+          companyName: "DemoCompany",
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setValidationMessage(data.message || "Failed to register");
+        toast.error(data.message || "Registration failed");
+      } else {
+        toast.success("Registered successfully!");
+        console.log("Registered:", data);
+        router.push("/");
+        setFormData({
+          firstName: "",
+          lastName: "",
+          email: "",
+          phone: "",
+          password: "",
+          confirmPassword: "",
+        });
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+      setValidationMessage("Server error");
+      console.error("Registration error:", error);
+    }
+
     setIsSubmitting(false);
   };
-
   return (
     <div className="flex flex-row h-screen">
       {/* Left Side */}
@@ -151,8 +183,7 @@ export default function Signup() {
                 Already have an account?{' '}
                 <span
                   onClick={() => router.push('/')}
-                  className="text-blue-600 font-medium cursor-pointer hover:underline"
-                >
+                  className="text-blue-600 font-medium cursor-pointer hover:underline">
                   Login here
                 </span>
               </p>
