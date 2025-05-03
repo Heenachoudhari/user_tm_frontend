@@ -25,33 +25,57 @@ export default function Userloginpage() {
   const isPhoneNumber = (input) => /^\d{10}$/.test(input);
   const isEmail = (input) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input);
 
-  const handleLogin = (event) => {
+  const handleLogin = async (event) => {
     event.preventDefault();
-  
+
     const isNumeric = /^\d+$/.test(emailOrPhone);
-if (isNumeric) {
-  if (!isPhoneNumber(emailOrPhone)) {
-    toast.error('Phone number must be exactly 10 digits.');
-    return;
-  }
-} else {
-  if (!isEmail(emailOrPhone)) {
-    toast.error('Please enter a valid email address.');
-    return;
-  }
-}
+    if (isNumeric) {
+      if (!isPhoneNumber(emailOrPhone)) {
+        toast.error('Phone number must be exactly 10 digits.');
+        return;
+      }
+    } else {
+      if (!isEmail(emailOrPhone)) {
+        toast.error('Please enter a valid email address.');
+        return;
+      }
+    }
 
     if (!validatePassword(password)) {
       toast.error('Password must be between 8 and 10 characters and include at least one letter, number, and special character.');
       return;
     }
-  
-    toast.success('Login Successful!');
-    setTimeout(() => {
-      router.push('/dashboard');
-    }, 1500);
+
+    try {
+      const res = await fetch('http://localhost:4000/api/user/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include', // important to send cookies if your backend sets any
+        body: JSON.stringify({
+          identifier: emailOrPhone,
+          password: password,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.error(data.message || 'Login failed');
+        return;
+      }
+
+      toast.success('Login successful!');
+      setTimeout(() => {
+        router.push('/dashboard');
+      }, 1500);
+    } catch (err) {
+      console.error(err);
+      toast.error('Something went wrong. Please try again.');
+    }
   };
-  
+
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-white">
@@ -96,9 +120,9 @@ if (isNumeric) {
             <form className="space-y-4" onSubmit={handleLogin}>
               {/* Email / Phone */}
               <div>
-              <label className="block text-sm font-medium text-black mb-1 font-poppins">
-  E-mail / Phone
-</label>
+                <label className="block text-sm font-medium text-black mb-1 font-poppins">
+                  E-mail / Phone
+                </label>
 
                 <input
                   type="text"
@@ -118,15 +142,15 @@ if (isNumeric) {
                     }
                   }}
                   placeholder="Enter your email or phone"
-                  className="w-full px-4 py-2 rounded-xl bg-white text-gray-400 shadow-[0_7px_25px_rgba(0,0,0,0.1)] focus:outline-none"
+                  className="w-full px-4 py-2 rounded-xl bg-white text-black shadow-[0_7px_25px_rgba(0,0,0,0.1)] focus:outline-none"
                 />
               </div>
 
               {/* Password */}
               <div className="relative">
-              <label className="block text-sm font-medium text-black mb-1 font-poppins">
-  Password
-</label>
+                <label className="block text-sm font-medium text-black mb-1 font-poppins">
+                  Password
+                </label>
 
                 <input
                   type={showPassword ? 'text' : 'password'}
@@ -135,8 +159,7 @@ if (isNumeric) {
                   placeholder="Enter 8-10 character secure password"
                   required
                   minLength={8} // Minimum length
-                  maxLength={10} // Maximum length
-                  className="w-full px-4 py-2 rounded-xl bg-white text-gray-400 shadow-[0_7px_25px_rgba(0,0,0,0.1)] focus:outline-none pr-10"
+                  className="w-full px-4 py-2 rounded-xl bg-white text-black shadow-[0_7px_25px_rgba(0,0,0,0.1)] focus:outline-none pr-10"
                 />
                 <span
                   onClick={() => setShowPassword(!showPassword)}

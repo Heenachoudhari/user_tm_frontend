@@ -46,12 +46,12 @@ export default function PasswordResetForm() {
     }
 
     try {
-      // Make an API call to your backend to verify OTP and change password
-      const response = await axios.post('http://localhost:4000/api/forgotpassword/verify-otp', {
-        email: email,  // You should pass the actual user's email here
+      const response = await axios.post(`${process.env.Backend_API}/forgotpassword/verify-otp`, {
+        email: email,
         otp: otp,
         newPassword: password,
       });
+      
 
       // If the response is successful
       toast.success('Password successfully updated!');
