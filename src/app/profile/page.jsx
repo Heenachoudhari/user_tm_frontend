@@ -21,10 +21,10 @@ function page() {
                     {/* Header + Edit Button */}
                     <div className="flex justify-between items-center">
                         <div>
-                            <h1 className="text-4xl font-[700]">My Profile</h1>
+                            <h1 className="text-3xl font-[700]">My Profile</h1>
                             <div className="h-1 w-[70%] bg-[#FFB006] mt-1"></div>
                         </div>
-                        <button className="px-7 rounded-2xl h-12 text-[25px] flex items-center gap-3 bg-[#018ABE] text-white"><span className="text-black"><FaRegEdit /></span>Edit</button>
+                        <button className="px-7 rounded-2xl h-12 text-lg font-semibold flex items-center gap-3 bg-[#018ABE] cursor-pointer text-white"><span className="text-black"><FaRegEdit /></span>Edit</button>
                     </div>
                     {/* Profile Card */}
                     <div className="w-full h-78 bg-linear-to-b from-[#018ABE] to-[#004058] rounded-2xl relative shadow-xl mb-8">
@@ -48,7 +48,7 @@ function page() {
                         <div className="flex justify-between w-full gap-28">
                             <div className="w-full flex flex-col">
                                 <label htmlFor="fName" className="text-xl font-[400]">First Name</label>
-                                <input type="text" id="fName" className="w-[full] px-4 py-2 rounded-xl shadow-[0px_3px_6px_rgba(0,0,0,0.4)] focus:outline-none" />
+                                <input type="text" id="fName" className="w-[full] px-4 py-2 rounded-xl shadow-[0px_3px_6px_rgba(0,0,0,0.4)] focus:outline-none " />
                             </div>
                             <div className="w-full flex flex-col">
                                 <label htmlFor="lName" className="text-xl font-[400]">Last Name</label>
