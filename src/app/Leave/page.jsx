@@ -16,9 +16,9 @@ function page() {
       <div className="w-full md:w-5/6 md:flex-1 h-screen bg-white">
         {/* Desktop Navbar (hidden on mobile) */}
         <NavBar />
-<div>
-  <Leave/>
-</div>
+        <div>
+          <Leave />
+        </div>
       </div>
 
     </div>
