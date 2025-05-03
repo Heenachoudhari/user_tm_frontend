@@ -28,31 +28,45 @@ export default function Userloginpage() {
   const handleLogin = async (event) => {
     event.preventDefault();
 
+    if (!emailOrPhone.trim() && !password.trim()) {
+      toast.error('Please enter your email/phone and password.');
+      return;
+    }
+  
+    if (!emailOrPhone.trim()) {
+      toast.error('Please enter your email or phone.');
+      return;
+    }
+  
+    if (!password.trim()) {
+      toast.error('Please enter your password.');
+      return;
+    }
+
     const isNumeric = /^\d+$/.test(emailOrPhone);
     if (isNumeric) {
       if (!isPhoneNumber(emailOrPhone)) {
-        toast.info('Phone number must be exactly 10 digits.');
+        toast.error('Phone number must be exactly 10 digits.');
         return;
       }
     } else {
       if (!isEmail(emailOrPhone)) {
-        toast.info('Please enter a valid email address.');
+        toast.error('Please enter a valid email address.');
         return;
       }
     }
 
     if (!validatePassword(password)) {
-      toast.info('Password must be between 8 and 10 characters and include at least one letter, number, and special character.');
+      toast.error('Password must be between 8 and 10 characters and include at least one letter, number, and special character.');
       return;
     }
-
     try {
-      const res = await fetch('http://localhost:4000/api/user/login', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}/user/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: 'include', // important to send cookies if your backend sets any
+        credentials: 'include',
         body: JSON.stringify({
           identifier: emailOrPhone,
           password: password,
