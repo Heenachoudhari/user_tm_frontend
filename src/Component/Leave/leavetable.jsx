@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Toaster, toast } from 'react-hot-toast';
 
 export default function LeaveTable() {
@@ -11,6 +11,10 @@ export default function LeaveTable() {
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
   const [reason, setReason] = useState('');
+
+  const [wordCount, setWordCount] = useState(0); // For word count tracking
+
+  const fileInputRef = useRef(null); // Reference for the file input
 
   const today = new Date().toISOString().split('T')[0];
 
@@ -31,6 +35,12 @@ export default function LeaveTable() {
       !fromDate || !toDate || !reason.trim()
     ) {
       toast.error('Please fill out all fields before submitting.', { duration: 3000 });
+      return;
+    }
+
+    // Check if Reason For Leave has at least 24 characters
+    if (reason.split(/\s+/).length < 24) {
+      toast.error('Reason for Leave must be at least 24 words long.', { duration: 3000 });
       return;
     }
 
@@ -74,6 +84,22 @@ export default function LeaveTable() {
     return diff || 0;
   };
 
+  const handleDeleteFile = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''; // Reset file input
+    }
+  };
+
+  // Update word count whenever the reason text area changes
+  const handleReasonChange = (e) => {
+    const updatedReason = e.target.value;
+    setReason(updatedReason);
+
+    // Split by spaces to count words
+    const words = updatedReason.trim().split(/\s+/);
+    setWordCount(words.filter(word => word).length);
+  };
+
   return (
     <div className="p-6 bg-gray-50 min-h-screen relative">
       <Toaster />
@@ -90,45 +116,48 @@ export default function LeaveTable() {
       {/* LEAVE MODAL */}
       {showModal && (
         <div className="fixed inset-0 bg-gray-500/50 backdrop-blur-[3px] flex justify-center items-center z-50">
-
           <div className="bg-white shadow-[0_0_20px_rgba(0,0,0,0.2)] rounded-lg p-10 w-[1000px] h-[600px] relative">
-          <div className="flex justify-center">
-  <h2 className="text-xl font-bold mb-8 border-b-2 border-black inline-block pb-1">
-    Leave Application
-  </h2>
-</div>
+            <div className="flex justify-center">
+              <h2 className="text-xl font-bold mb-8 border-b-2 border-black inline-block pb-1">
+                Leave Application
+              </h2>
+            </div>
 
-<div className="flex space-x-10 mb-4 gap-45">
-<div className="flex items-center space-x-2">
-  <label className="font-bold whitespace-nowrap">From Date</label>
-  <input
-    type="date"
-    value={fromDate}
-    onChange={(e) => setFromDate(e.target.value)}
-    min={today}
-    className="rounded px-2 py-2 shadow-md outline-none focus:ring-2 focus:ring-blue-300"
-  />
-</div>
+            <div className="flex space-x-10 mb-4 gap-45">
+              <div className="flex items-center space-x-2">
+                <label htmlFor="fromDate" className="font-bold whitespace-nowrap">From Date</label>
+                <input
+                  type="date"
+                  id="fromDate"
+                  value={fromDate}
+                  onChange={(e) => setFromDate(e.target.value)}
+                  min={today}
+                  className="rounded px-2 py-2 shadow-md outline-none focus:ring-2 focus:ring-blue-300"
+                />
+              </div>
 
-<div className="flex items-center space-x-24">
-  <label className="font-bold whitespace-nowrap">To Date</label>
-  <input
-    type="date"
-    value={toDate}
-    onChange={(e) => setToDate(e.target.value)}
-    min={fromDate || today}
-    className="rounded px-2 py-2 shadow-md outline-none focus:ring-2 focus:ring-blue-300"
-  />
-</div>
-
+              <div className="flex items-center space-x-24">
+                <label htmlFor="toDate" className="font-bold whitespace-nowrap">To Date</label>
+                <input
+                  type="date"
+                  id="toDate"
+                  value={toDate}
+                  onChange={(e) => setToDate(e.target.value)}
+                  min={fromDate || today}
+                  className="rounded px-2 py-2 shadow-md outline-none focus:ring-2 focus:ring-blue-300"
+                />
+              </div>
             </div>
 
             <div className="mb-4 flex items-center space-x-10 gap-20">
               <div className="flex items-center space-x-2">
-                <label className="font-bold whitespace-nowrap">Leave Type</label>
-                <select value={leaveType} onChange={(e) => setLeaveType(e.target.value)}
-                  className="rounded px-4 py-2 w-[250px] shadow-lg outline-none focus:ring-2 focus:ring-blue-300">
-
+                <label htmlFor="leaveType" className="font-bold whitespace-nowrap">Leave Type</label>
+                <select
+                  id="leaveType"
+                  value={leaveType}
+                  onChange={(e) => setLeaveType(e.target.value)}
+                  className="rounded px-4 py-2 w-[250px] shadow-lg outline-none focus:ring-2 focus:ring-blue-300"
+                >
                   <option>Select</option>
                   <option>Sick Leave</option>
                   <option>Casual Leave</option>
@@ -136,9 +165,13 @@ export default function LeaveTable() {
               </div>
 
               <div className="flex items-center space-x-2">
-                <label className="font-bold whitespace-nowrap">Select for Approval</label>
-                <select value={approvalTo} onChange={(e) => setApprovalTo(e.target.value)}
-                  className="rounded px-4 py-2 w-[250px] shadow-lg outline-none focus:ring-2 focus:ring-blue-300">
+                <label htmlFor="approvalTo" className="font-bold whitespace-nowrap">Select for Approval</label>
+                <select
+                  id="approvalTo"
+                  value={approvalTo}
+                  onChange={(e) => setApprovalTo(e.target.value)}
+                  className="rounded px-4 py-2 w-[250px] shadow-lg outline-none focus:ring-2 focus:ring-blue-300"
+                >
                   <option>Select</option>
                   <option>Ayaan Raje</option>
                   <option>Prashant Patil</option>
@@ -149,57 +182,57 @@ export default function LeaveTable() {
             </div>
 
             <div className="flex items-center space-x-4">
-  <label className="font-semibold text-lg">Attachment</label>
+              <label htmlFor="fileInput" className="font-semibold text-lg">Attachment</label>
 
-  <div className="flex items-center space-x-2">
-    {/* File Input Box */}
-    <div className="flex items-center border rounded-md bg-[#877575] px-2 py-2 w-[300px] shadow-md">
-      <input
-        type="file"
-        className="text-black file:mr-4 file:py-1 file:px-3
-                   file:rounded file:border file:border-gray-300
-                   file:text-sm file:font-medium
-                   file:bg-white file:text-black
-                   hover:file:bg-gray-200"
-      />
-    </div>
+              <div className="flex items-center space-x-2">
+                {leaveType === 'Sick Leave' && (
+                  <div className="flex items-center border rounded-md bg-[#877575] px-2 py-2 w-[300px] shadow-md">
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      id="fileInput"
+                      className="text-black file:mr-4 file:py-1 file:px-3
+                                file:rounded file:border file:border-gray-300
+                                file:text-sm file:font-medium
+                                file:bg-white file:text-black
+                                hover:file:bg-gray-200"
+                    />
+                  </div>
+                )}
+                {leaveType === 'Casual Leave' && (
+                  <p className="text-gray-500">No file required for Casual Leave</p>
+                )}
 
-    {/* Delete Icon Outside the Box */}
-    <button type="button" className="text-black hover:text-red-600">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-        viewBox="0 0 24 24" className="h-5 w-5">
-        <path d="M3 6h18v2H3V6zm2 3h14l-1.5 12.5a1 1 0 01-1 .5H7.5a1 1 0 01-1-.5L5 9zm5 2v8h2v-8H10zm4 0v8h2v-8h-2z" />
-      </svg>
-    </button>
-  </div>
-</div>
+                <button type="button" onClick={handleDeleteFile} className="text-black hover:text-red-600">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" className="h-5 w-5">
+                    <path d="M3 6h18v2H3V6zm2 3h14l-1.5 12.5a1 1 0 01-1 .5H7.5a1 1 0 01-1-.5L5 9zm5 2v8h2v-8H10zm4 0v8h2v-8h-2z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
 
-
-            <div className="mb-6 flex items-start mt-6">
-              <label className="font-bold mt-4 w-40">Reason For Leave</label>
-              <textarea value={reason} onChange={(e) => setReason(e.target.value)}
-                className="border border-black rounded px-4 py-2 w-[780px] h-[130px] resize-none shadow-lg mt-4"></textarea>
+            <div className="mb-6 mt-6">
+              <label htmlFor="reason" className="font-bold mt-4 block">Reason For Leave</label>
+              <textarea id="reason" value={reason} onChange={handleReasonChange} className="border border-black rounded px-4 py-2 w-full h-[130px] resize-none shadow-lg mt-2" />
+              <div className="text-right text-gray-600 text-sm">{wordCount}/ 24</div>
             </div>
 
             <div className="text-center space-x-4">
+              <button
+                onClick={() => setShowModal(false)}
+                className="border border-blue-500 text-blue-500 bg-white px-6 py-2  shadow-md hover:bg-blue-50 font-bold self-start mt-3 rounded-lg"
+              >
+                Cancel
+              </button>
 
-            <button
-  onClick={() => setShowModal(false)}
-  className="border border-blue-500 text-blue-500 bg-white px-6 py-2 rounded shadow-md hover:bg-blue-50 font-bold self-start mt-3 rounded-lg"
->
-  Cancel
-</button>
+              <button
+                onClick={submitLeave}
+                className="bg-[#018ABE] font-bold text-white px-6 py-2  hover:bg-#018ABE self-start mt-3 rounded-lg"
+              >
+                Submit
+              </button>
+            </div>
 
-
-  <button
-    onClick={submitLeave}
-    className="bg-[#018ABE] font-bold text-white px-6 py-2 rounded hover:bg-#018ABE self-start mt-3 rounded-lg"
-  >
-    Submit
-  </button>
-</div>
-
-            
           </div>
         </div>
       )}
@@ -212,24 +245,24 @@ export default function LeaveTable() {
               <th className="p-3 border-r border-white rounded-tl-lg">Sr No.</th>
               <th className="p-3 border-r border-white">Request to</th>
               <th className="p-3 border-r border-white">Reason for Leave</th>
-              <th className="p-3 border-r border-white">Apply Date</th>
-              <th className="p-3 border-r border-white">From Date</th>
-              <th className="p-3 border-r border-white">To Date</th>
-              <th className="p-3 border-r border-white">Days</th>
-              <th className="p-3 rounded-tr-lg">Status</th>
+              <th className="p-3 border-r border-white  whitespace-nowrap">Apply Date</th>
+              <th className="p-3 border-r border-white whitespace-nowrap">From Date</th>
+              <th className="p-3 border-r border-white whitespace-nowrap">To Date</th>
+              <th className="p-3 border-r border-white whitespace-nowrap">Total Days</th>
+              <th className="p-3 border-r border-white whitespace-nowrap">Status</th>
             </tr>
           </thead>
-          <tbody className="bg-white">
+          <tbody>
             {leaves.map((leave, index) => (
-              <tr key={index} className="border-t">
-                <td className="p-3 border-r">{index + 1}</td>
-                <td className="p-3 border-r">{leave.approvalTo}</td>
-                <td className="p-3 border-r">{leave.reason}</td>
-                <td className="p-3 border-r">{leave.applyDate}</td>
-                <td className="p-3 border-r">{leave.fromDate}</td>
-                <td className="p-3 border-r">{leave.toDate}</td>
-                <td className="p-3 border-r">{leave.totalDays}</td>
-                <td className="p-3 font-bold text-gray-700">{leave.status}</td>
+              <tr key={index}>
+                <td className="py-1"><p className="border-r p-4 whitespace-nowrap">{index + 1}</p></td>
+                <td className="py-1  "><p className="border-r p-4 whitespace-nowrap ">{leave.approvalTo}</p></td>
+                <td className="py-1"><p className="border-r p-4">{leave.reason}</p></td>
+                <td className="py-1"><p className="border-r p-4 whitespace-nowrap ">{leave.applyDate}</p></td>
+                <td className="py-1"><p className="border-r p-4 whitespace-nowrap">{leave.fromDate}</p></td>
+                <td className="py-1"><p className="border-r p-4 whitespace-nowrap">{leave.fromDate}</p></td>
+                <td className="py-1"><p className="border-r p-4 whitespace-nowrap">{leave.fromDate}</p></td>
+                <td className="py-1"><p className=" p-4 whitespace-nowrap">{leave.status}</p></td>
               </tr>
             ))}
           </tbody>

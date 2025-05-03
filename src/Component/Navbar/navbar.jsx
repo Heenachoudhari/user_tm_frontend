@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import {
- 
   FaBell,
   FaVideo,
   FaUser,
@@ -14,16 +14,18 @@ import { useUser } from '../usersignup/usercontext';
 
 export default function NavBar() {
   const { userName } = useUser();
-  
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [showMeetingPopup, setShowMeetingPopup] = useState(false); // Added state for popup visibility
   const notifications = []; // Replace with actual notifications if needed
-
-  
 
   const handleProfileAction = (action) => {
     alert(`Profile action: ${action}`);
     setShowProfileMenu(false);
+  };
+
+  const toggleMeetingPopup = () => {
+    setShowMeetingPopup(!showMeetingPopup); // Toggle popup visibility
   };
 
   return (
@@ -35,9 +37,106 @@ export default function NavBar() {
 
       <div className="ml-auto flex items-center gap-12 mr-10">
         {/* Video Icon */}
-        <button title="Video Call">
-          <FaVideo className="w-5 h-5 text-black" />
+        <button title="Video Call" onClick={toggleMeetingPopup}>
+          <FaVideo className="w-5 h-5 text-black cursor-pointer" />
         </button>
+
+        {/* Video Call Popup */}
+        {showMeetingPopup && (
+          <div className="min-h-screen flex items-center justify-center bg-gray-400/50 bg-opacity-50 backdrop-blur-[1px] p-6 fixed inset-0 z-50">
+            <div className="bg-white p-8 rounded-lg shadow-md text-center w-full max-w-xl relative">
+              <h2 className="text-2xl font-bold text-center mb-6 border-b-2 border-black inline-block">
+                SCHEDULE MEETING
+              </h2>
+
+              <form className="space-y-4">
+                <input
+                  type="text"
+                  placeholder="Meeting Title"
+                  required
+                  className="w-full p-2 border border-black rounded"
+                />
+
+                <textarea
+                  placeholder="Description"
+                  required
+                  className="w-full p-2 border border-black rounded"
+                ></textarea>
+
+                <select
+                  required
+                  className="w-full p-2 border border-black rounded"
+                >
+                  <option value="">Select Team Members</option>
+                  <option value="Member 1">Member 1</option>
+                  <option value="Member 2">Member 2</option>
+                  <option value="Member 3">Member 3</option>
+                </select>
+
+                <div className="flex gap-4">
+                  <div className="relative w-1/2">
+                    <input
+                      type="date"
+                      required
+                      className="w-full p-2 border border-gray-300 rounded text-transparent bg-transparent"
+                    />
+                    <span className="absolute left-3 top-2 text-black pointer-events-none">
+                      Meeting Date
+                    </span>
+                  </div>
+
+                  <div className="relative w-1/2">
+                    <input
+                      type="time"
+                      required
+                      className="w-full p-2 border border-gray-300 rounded text-transparent bg-transparent"
+                    />
+                    <span className="absolute left-3 top-2 text-black pointer-events-none">
+                      Meeting Time
+                    </span>
+                  </div>
+                </div>
+
+                <select
+                  required
+                  className="w-full p-2 border border-black rounded"
+                >
+                  <option value="">Select Duration</option>
+                  <option value="30">30 minutes</option>
+                  <option value="60">1 hour</option>
+                  <option value="90">1.5 hours</option>
+                </select>
+
+                <div className="flex items-center w-full">
+                  <label className="mr-2 text-gray-400 whitespace-nowrap">Link</label>
+                  <input
+                    type="url"
+                    required
+                    className="flex-1 p-2 border border-black rounded"
+                  />
+                </div>
+
+                <div className="flex justify-center">
+                  <button
+                    type="submit"
+                    style={{ backgroundColor: '#018ABE' }}
+                    className="px-6 py-2 text-white rounded hover:opacity-90"
+                  >
+                    Create
+                  </button>
+                </div>
+              </form>
+
+              {/* Close button for popup */}
+              <button
+                onClick={toggleMeetingPopup}
+                className="absolute top-2 right-2 text-2xl text-gray-500"
+              >
+                &times;
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Notification Icon */}
         <div className="relative">
