@@ -1,26 +1,53 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation"; // ✅ Correct import for Next.js App Router
+import { useRouter } from "next/navigation";
 import gsap from "gsap";
 import { AiFillDelete } from "react-icons/ai";
 import toast, { Toaster } from "react-hot-toast";
 import { FiChevronDown } from "react-icons/fi";
+import * as XLSX from "xlsx";
 
-export default function Timeline() {
+export default function ETimeline() {
   const [items, setItems] = useState([]);
   const [date, setDate] = useState("");
   const router = useRouter();
 
-  const [selectedManagers, setSelectedManagers] = useState([
-    "Prashant Patil",
-    "Ayaan Raje",
-  ]);
+  const dummyData = {
+    "2025-05-01": [
+      { bucket: "work", task: "Bug Fixing", time: "9:00 AM to 10:00 AM", duration: "01:00" },
+      { bucket: "work", task: "Bug Fixing", time: "10:00 AM to 11:00 AM", duration: "01:00" },
+      { bucket: "work", task: "Code Review", time: "11:00 AM to 12:00 PM", duration: "01:00" },
+      { bucket: "work", task: "Code Review", time: "2:00 PM to 3:00 PM", duration: "01:00" },
+      { bucket: "work", task: "Code Review", time: "3:00 PM to 4:00 AM", duration: "01:00" },
+      { bucket: "work", task: "Code Review", time: "4:00 PM to 5:00 PM", duration: "01:00" },
+      { bucket: "work", task: "Code Review", time: "5:00 PM to 6:00 PM", duration: "01:00" },
+    ],
+    "2025-05-02": [
+        { bucket: "work", task: "Bug Fixing", time: "9:00 AM to 10:00 AM", duration: "01:00" },
+      { bucket: "work", task: "Bug Fixing", time: "10:00 AM to 11:00 AM", duration: "01:00" },
+      { bucket: "work", task: "Bug Fixing", time: "11:00 AM to 12:00 PM", duration: "01:00" },
+      { bucket: "work", task: "Bug Fixing", time: "2:00 PM to 3:00 PM", duration: "01:00" },
+      { bucket: "work", task: "Bug Fixing", time: "3:00 PM to 4:00 AM", duration: "01:00" },
+      { bucket: "work", task: "Bug Fixing", time: "4:00 PM to 5:00 PM", duration: "01:00" },
+      { bucket: "work", task: "Bug Fixing", time: "5:00 PM to 6:00 PM", duration: "01:00" },
+    ],
+    "2025-05-03": [
+        { bucket: "work", task: "error ", time: "9:00 AM to 10:00 AM", duration: "01:00" },
+        { bucket: "work", task: "Bug Fixing", time: "10:00 AM to 11:00 AM", duration: "01:00" },
+        { bucket: "work", task: "Code Review", time: "11:00 AM to 12:00 PM", duration: "01:00" },
+        { bucket: "work", task: "error ", time: "2:00 PM to 3:00 PM", duration: "01:00" },
+        { bucket: "work", task: "error ", time: "3:00 PM to 4:00 AM", duration: "01:00" },
+        { bucket: "work", task: "error ", time: "4:00 PM to 5:00 PM", duration: "01:00" },
+        { bucket: "work", task: "error ", time: "5:00 PM to 6:00 PM", duration: "01:00" },
+    ],
+  };
+  
+
+  const [selectedManagers, setSelectedManagers] = useState(["Prashant Patil", "Ayaan Raje"]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [todayHours, setTodayHours] = useState([]);
-  const [totalTime, setTotalTime] = useState("01:00");
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false);
+  const [totalTime, setTotalTime] = useState("00:00");
 
   const underlineRef = useRef(null);
   const rowRefs = useRef([]);
@@ -31,22 +58,22 @@ export default function Timeline() {
       { width: "0%" },
       { width: "100%", duration: 1, ease: "power2.out" }
     );
-
-    const defaultTimes = Array.from({ length: 8 }, (_, i) => {
-      const start = new Date(0, 0, 0, 9 + i, 0);
-      const end = new Date(0, 0, 0, 10 + i, 0);
-      return {
-        timeRange: `${formatTime(start)} - ${formatTime(end)}`,
-        task: "",
-        type: "default",
-        duration: "0100",
-        bucket: "work",
-      };
-    });
-
-    setItems(defaultTimes);
-    setTodayHours(defaultTimes.map(() => "0100"));
   }, []);
+
+  useEffect(() => {
+    if (date && dummyData[date]) {
+      setItems(dummyData[date]);
+      const times = dummyData[date].map((item) =>
+        item.duration.replace(":", "")
+      );
+      setTodayHours(times);
+      setTotalTime(addTimeStrings(times));
+    } else {
+      setItems([]);
+      setTodayHours([]);
+      setTotalTime("00:00");
+    }
+  }, [date]);
 
   const formatTime = (date) =>
     date.toLocaleTimeString([], {
@@ -62,9 +89,9 @@ export default function Timeline() {
 
   const getNextTimeRange = () => {
     if (items.length === 0) return "09:00 AM - 10:00 AM";
-    const lastTime = items[items.length - 1].timeRange.split(" - ")[1];
+    const lastTime = items[items.length - 1].timeRange?.split(" - ")[1] || "10:00 AM";
     const [time, period] = lastTime.split(" ");
-    let [hour, minute] = time.split(":").map(Number);
+    let [hour, minute] = time.split(":" ).map(Number);
     if (period === "PM" && hour !== 12) hour += 12;
     if (period === "AM" && hour === 12) hour = 0;
     const start = new Date(0, 0, 0, hour, minute);
@@ -76,7 +103,7 @@ export default function Timeline() {
     const newItem = {
       task: `${type} task`,
       timeRange: getNextTimeRange(),
-      duration: "0100",
+      duration: "01:00",
       type,
       bucket: type,
     };
@@ -143,15 +170,21 @@ export default function Timeline() {
     setSelectedManagers([]);
     setItems([]);
     setTodayHours([]);
-    setTotalTime("01:00");
+    setTotalTime("00:00");
   };
 
-  const handleEditTimesheet = () => {
-    router.push("/edit-timesheet");
-  };
+  const exportToExcel = () => {
+    const worksheetData = items.map((item) => ({
+      Bucket: item.bucket,
+      Task: item.task,
+      Time: item.time || item.timeRange,
+      Duration: item.duration,
+    }));
 
-  const handleAddTask = () => {
-    router.push("/add-task");
+    const worksheet = XLSX.utils.json_to_sheet(worksheetData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Timesheet");
+    XLSX.writeFile(workbook, "Timesheet.xlsx");
   };
 
   return (
@@ -162,22 +195,16 @@ export default function Timeline() {
           ref={underlineRef}
           className="absolute left-0 bottom-0 h-[2px] bg-yellow-500 w-full"
         ></span>
-        Add Time
+        Edit Time
       </h2>
       <span className="text-2xl font-bold text-gray-800">sheet</span>
 
-      <div className="flex justify-end gap-8 mb-4">
+      <div className="flex justify-end mt-4">
         <button
-          onClick={handleEditTimesheet}
-          className="bg-[#018ABE] hover:bg-[#0177a6] text-white font-semibold px-4 py-2 rounded-md shadow cursor-pointer"
+          onClick={exportToExcel}
+          className="bg-[#018ABE] text-white px-4 py-2 rounded-md hover:bg-green-700"
         >
-          Edit Timesheet
-        </button>
-        <button
-          onClick={handleAddTask}
-          className="bg-[#018ABE] hover:bg-[#0177a6] text-white font-semibold px-4 py-2 rounded-md shadow cursor-pointer"
-        >
-          Add Task
+          Export
         </button>
       </div>
 
@@ -242,85 +269,65 @@ export default function Timeline() {
           </button>
         </div>
       </div>
-      <div className="flex items-center gap-4 mb-4">
-  <label className="text-sm font-medium text-gray-800 whitespace-nowrap">
-    Enter Project Name
-  </label>
-  <input
-    type="text"
-    placeholder="Project name"
-    className="border border-gray-400 rounded-md px-4 py-2 w-full max-w-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-  />
-</div>
 
-      <div className="overflow-x-auto mb-4">
-        <table className="min-w-full border border-gray-100 rounded-xl">
-          <thead>
-            <tr className="bg-[#018ABE]">
-              <th className="py-2 px-4 text-white border">Bucket</th>
-              <th className="py-2 px-4 text-white border">Task</th>
-              <th className="py-2 px-4 text-white border">Time</th>
-              <th className="py-2 px-4 text-white border">Duration</th>
-              <th className="py-2 px-4 text-white border">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {items.map((item, index) => (
-              <tr key={index} ref={(el) => (rowRefs.current[index] = el)}>
-                <td className="px-4 py-2 w-[10%] border-r border-gray-100 text-center">{item.bucket}</td>
-                <td className="px-4 py-2 w-[40%] border-r border-gray-100">
-                  <input
-                    type="text"
-                    value={item.task}
-                    onChange={(e) => updateItem(index, "task", e.target.value)}
-                    className="w-full p-1 shadow-md border border-gray-300  rounded-md"
-                    placeholder="Enter task"
-                  />
-                </td>
-                <td className="px-4 py-2 w-[20%] border-r border-gray-100">
-                  <input
-                    type="text"
-                    value={item.timeRange}
-                    onChange={(e) => updateItem(index, "timeRange", e.target.value)}
-                    className="w-full p-1 shadow-md border border-gray-300  rounded-md"
-                    placeholder="Enter time range"
-                  />
-                </td>
-                <td className="px-4 py-2 border-r border-gray-100 w-[10%]">
-                  <input
-                    type="text"
-                    value={formatDuration(item.duration)}
-                    onChange={(e) => handleDurationChange(index, e.target.value)}
-                    className="w-full p-1 shadow-md rounded-md text-center"
-                    placeholder="hh:mm"
-                  />
-                </td>
-                <td className="px-4 py-2 text-center w-[5%]">
-                  <button onClick={() => deleteItem(index)} className="text-black">
-                    <AiFillDelete />
-                  </button>
-                </td>
-              </tr>
-            ))}
-            <tr className="bg-gray-100 mt-3 font-semibold">
+      {/* Timeline Display */}
+      <div className="space-y-4">
+  <table className="min-w-full table-auto border-collapse border border-gray-300">
+    <thead>
+      <tr className="bg-[#018ABE] text-white">
+        <th className="px-4 py-2 border border-gray-300 text-left">Bucket</th>
+        <th className="px-4 py-2 border border-gray-300 text-left">Task</th>
+        <th className="px-4 py-2 border border-gray-300 text-left">Time</th>
+        <th className="px-4 py-2 border border-gray-300 text-left">Duration</th>
+        <th className="px-4 py-2 border border-gray-300 text-left">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+  {items.map((item, index) => (
+    <tr key={index} className="bg-white hover:bg-gray-100">
+      <td className="px-4 py-2 border border-gray-300 w-[10%]">{item.bucket}</td>
+      <td className="px-4 py-2 border border-gray-300 w-[40%]">{item.task}</td>
+      <td className="px-4 py-2 border border-gray-300 w-[20%]">{item.time || item.timeRange}</td>
+      <td className="px-4 py-2 border border-gray-300 w-[10%]">
+        <input
+          type="text"
+          value={item.duration}
+          onChange={(e) => handleDurationChange(index, e.target.value)}
+          className="border px-2 py-1 rounded-md"
+        />
+      </td>
+      <td className="px-4 py-2 border w-[5%] border-gray-300">
+        <button
+          onClick={() => deleteItem(index)}
+          className="text-red-600 hover:text-red-800 "
+        >
+          <AiFillDelete size={20} />
+        </button>
+      </td>
+    </tr>
+  ))}
+  {/* Total Hours Row */}
+  <tr className="bg-gray-100 mt-3 font-semibold">
               <td className="px-4 py-2 text-center" colSpan={3}>
                 Total Hours
               </td>
-              <td className="px-4 py-2 text-center border-2 border-white shadow-md">
+              <td className="px-4 py-2 text-center ">
                 {totalTime}
               </td>
               <td className="px-4 py-2"></td>
             </tr>
-          </tbody>
-        </table>
-      </div>
+</tbody>
 
-      <div className="flex justify-center items-center gap-4 mb-6">
+  </table>
+</div>
+
+      <div className="mt-6 flex justify-center items-center">
+     
         <button
           onClick={handleSubmit}
-          className="bg-[#018ABE] text-white px-6 py-2 rounded-lg cursor-pointer"
+          className="bg-[#018ABE] text-white  px-6 py-2 rounded-lg hover:bg-green-700"
         >
-          Submit
+         update
         </button>
       </div>
     </div>

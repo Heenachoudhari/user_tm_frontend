@@ -1,5 +1,8 @@
 import NavBar from '@/Component/navbar/navbar'
-import Timeline from '@/Component/timesheet/timesheet'
+import ETimeline from '@/Component/timesheet/edittimesheet';
+
+
+
 import Sidebar from '@/Component/usersidebar/usersidebar'
 import React from 'react'
 
@@ -18,7 +21,7 @@ export default function Home() {
 
       {/* Scrollable Content below Navbar */}
       <div className="mt-[60px] ml-[16.6667%] h-[calc(100vh-60px)] overflow-y-auto p-4 bg-white">
-        <Timeline />
+        <ETimeline/>
       </div>
     </div>
   );
