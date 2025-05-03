@@ -5,27 +5,28 @@ import Link from 'next/link'
 import Image from 'next/image'
 
 const menuItems = [
-  { label: 'Dashboard', img: '/dashboard.png', href: '#' },
-  { label: 'Attendance', img: '/attendance.png', href: '#' },
-  { label: 'Add TimeSheet', img: '/timesheet.png', href: '#' },
-  { label: 'Leave', img: '/leave.png', href: '#' },
-  { label: 'Salary', img: '/salary.png', href: '#' },
-  { label: 'Company Policies', img: '/company.png', href: '#' },
-  { label: 'Logout', img: '/logout.png', href: '#' }
+  { label: 'Dashboard', img: '/dashboard.png', href: '/dashboard' },
+  { label: 'Attendance', img: '/attendance.png', href: '/attendance' },
+  { label: 'Add TimeSheet', img: '/timesheet.png', href: '/timesheet' },
+  { label: 'Calendar', img: '/calendar.png', href: '/calendar' },
+  { label: 'Leave', img: '/leave.png', href: '/leavetable' },
+  { label: 'Salary', img: '/salary.png', href: '/salary' },
+  { label: 'Company Policies', img: '/company.png', href: '/companypolicy' },
+  { label: 'Logout', img: '/logout.png', href: '/' }
 ]
 
 export default function Sidebar() {
   return (
-    <div className="fixed min-h-screen w-[13.2rem] bg-gradient-to-b from-[#018ABE] via-[#65B7D4] to-[#E0E2E3] text-white flex flex-col items-center py-6">
+    <div className="fixed min-h-screen w-1/6 bg-gradient-to-b from-[#018ABE] via-[#65B7D4] to-[#E0E2E3] text-white flex flex-col items-center py-6">
 
       {/* Logo */}
       <div className="flex justify-center mb-3">
-        <Image 
-          src="/task.png" 
-          alt="Logo" 
-          width={120} 
-          height={120} 
-          className="object-contain" 
+        <Image
+          src="/task.png"
+          alt="Logo"
+          width={120}
+          height={120}
+          className="object-contain"
         />
       </div>
 

@@ -1,7 +1,58 @@
-import React from 'react';
+'use client';
+import React, { useRef } from 'react';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 export default function SalarySlipPage() {
+    const pdfRef = useRef();
+
+    const handleDownloadPdf = async () => {
+        try {
+            const element = pdfRef.current;
+            const canvas = await html2canvas(element, {
+                scale: 2,
+                useCORS: true,
+                logging: false,
+            });
+
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = pdf.internal.pageSize.getHeight();
+
+            const imgWidth = pdfWidth;
+            const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+
+            let heightLeft = imgHeight;
+            let position = 0;
+
+            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pdfHeight;
+
+            while (heightLeft > 0) {
+                position = heightLeft - imgHeight;
+                pdf.addPage();
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pdfHeight;
+            }
+
+            pdf.save('salary-slip.pdf');
+        } catch (error) {
+            console.error('Error generating PDF:', error);
+        }
+    };
+
     return (
+        <div className="max-w-4xl mx-auto p-8 bg-white">
+            {/* Download Button */}
+            <div className="text-right mb-4">
+                <button 
+                    onClick={handleDownloadPdf}
+                    className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded"
+                >
+                    Download PDF
+                </button>
+            </div>
         <div className="max-w-4xl mx-auto p-8 bg-white shadow-lg border rounded-lg mt-10 font-sans text-sm">
             <div className="mb-6">
                 <div className="text-sm font-bold bg-orange-200 p-2">Salary Slip</div>
@@ -21,7 +72,7 @@ export default function SalarySlipPage() {
                 <div>
                     <h2 className="text-xl font-bold mb-2">Employee Pay Summary</h2>
                     <p><strong>Employee Name:</strong> Prashant Patil</p>
-                    <p><strong>Designation:</strong> Salesman</p>
+                    <p><strong>Designation:</strong> Co-Founder</p>
                     <p><strong>Date of Joining:</strong> 8-May-2020</p>
                     <p><strong>Pay Period:</strong> September 2025</p>
                     <p><strong>Pay Date:</strong> 30-Sep-2025</p>
@@ -32,7 +83,7 @@ export default function SalarySlipPage() {
                 {/* Net Pay Summary Right */}
                 <div className="bg-green-100 border border-green-400 text-center rounded-lg px-4 py-2 self-start">
                     <p className="text-xs font-semibold">Employee Net Pay</p>
-                    <p className="text-2xl font-bold text-green-600">₹5,213.95</p>
+                    <p className="text-2xl font-bold text-green-600">₹50,213.95</p>
                     <p className="text-sm">Paid Days: 30</p>
                 </div>
             </div>
@@ -56,7 +107,7 @@ export default function SalarySlipPage() {
                     <p className="font-semibold border-t pt-2">Gross Salary</p>
                 </div>
                 <div className="space-y-1">
-                    <p>₹5,600.00</p>
+                    <p>₹50,600.00</p>
                     <p>₹200.00</p>
                     <p>₹150.00</p>
                     <p>₹150.00</p>
@@ -83,7 +134,7 @@ export default function SalarySlipPage() {
             {/* Net Pay */}
             <div className="mt-6">
                 <h3 className="font-semibold">NET PAY</h3>
-                <p className="text-xl font-bold text-green-600">₹5,213</p>
+                <p className="text-xl font-bold text-green-600">₹50,213</p>
                 <p className="text-sm italic">Amount in Words: Five Thousand Two Hundred and Thirteen Dollar & 95/100</p>
             </div>
 
@@ -112,9 +163,10 @@ export default function SalarySlipPage() {
 
             {/* Final Net Payable */}
             <div className="bg-orange-100 mt-6 p-4 rounded-lg text-center">
-                <p className="text-xl font-bold text-orange-700">TOTAL NET PAYABLE: ₹5,313</p>
+                <p className="text-xl font-bold text-orange-700">TOTAL NET PAYABLE: ₹50,313</p>
                 <p className="text-sm italic">(Five Thousand Three Hundred and Thirteen Ruppees)</p>
             </div>
+        </div>
         </div>
     );
 }
