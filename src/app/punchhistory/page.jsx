@@ -1,4 +1,5 @@
-import AttendancePage from '@/Component/attendance/myattendance';
+
+import PunchHistory from '@/Component/attendance/punchhistory';
 import NavBar from '@/Component/navbar/navbar'
 
 
@@ -22,7 +23,7 @@ export default function Home() {
 
       {/* Scrollable Content below Navbar */}
       <div className="mt-[60px] ml-[16.6667%] h-[calc(100vh-60px)] overflow-y-auto p-4 bg-white">
-       <AttendancePage/>
+      <PunchHistory/>
       </div>
     </div>
   );
