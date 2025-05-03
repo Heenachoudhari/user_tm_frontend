@@ -31,18 +31,18 @@ export default function Userloginpage() {
     const isNumeric = /^\d+$/.test(emailOrPhone);
     if (isNumeric) {
       if (!isPhoneNumber(emailOrPhone)) {
-        toast.error('Phone number must be exactly 10 digits.');
+        toast.info('Phone number must be exactly 10 digits.');
         return;
       }
     } else {
       if (!isEmail(emailOrPhone)) {
-        toast.error('Please enter a valid email address.');
+        toast.info('Please enter a valid email address.');
         return;
       }
     }
 
     if (!validatePassword(password)) {
-      toast.error('Password must be between 8 and 10 characters and include at least one letter, number, and special character.');
+      toast.info('Password must be between 8 and 10 characters and include at least one letter, number, and special character.');
       return;
     }
 
