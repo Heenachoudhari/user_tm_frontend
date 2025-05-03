@@ -216,23 +216,9 @@ export default function NavBar() {
                   className="w-full px-4 py-2 text-left flex items-center space-x-3 hover:bg-gray-100"
                 >
                   <FaUser className="text-gray-600" />
-                  <span>View Profile</span>
-                </button>
-
-                <button
-                  onClick={() => handleProfileAction('change-photo')}
-                  className="w-full px-4 py-2 text-left flex items-center space-x-3 hover:bg-gray-100"
-                >
-                  <FaCog className="text-gray-600" />
-                  <span>Change Profile Photo</span>
-                </button>
-
-                <button
-                  onClick={() => handleProfileAction('settings')}
-                  className="w-full px-4 py-2 text-left flex items-center space-x-3 hover:bg-gray-100"
-                >
-                  <FaCog className="text-gray-600" />
-                  <span>Settings</span>
+                  <Link href ="/profile">
+                    <span>View Profile</span>
+                  </Link>
                 </button>
 
                 <div className="border-t my-1"></div>
@@ -242,7 +228,9 @@ export default function NavBar() {
                   className="w-full px-4 py-2 text-left flex items-center space-x-3 hover:bg-gray-100 text-red-500"
                 >
                   <FaSignOutAlt />
+                  <Link href="/">
                   <span>Logout</span>
+                  </Link>
                 </button>
               </div>
             </div>

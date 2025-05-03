@@ -16,7 +16,7 @@ export default function Forgotpassword() {
     e.preventDefault();
 
     try {
-      const res = await axios.post('http://localhost:4000/api/forgotpassword/generate-otp', {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API}/forgotpassword/generate-otp`, {
         email,
       });
 
@@ -45,12 +45,13 @@ export default function Forgotpassword() {
     if (isResendDisabled) return;
 
     try {
-      const res = await axios.post('http://localhost:4000/api/forgotpassword/generate-otp', {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API}/forgotpassword/generate-otp`, {
         email,
       });
 
       if (res.status === 200) {
-        toast.success('OTP resent successfully!');
+        toast.success('OTP resent successfully!').setTimeout(() => {}, 2000);
+        router.push('/verifyotp');
         setIsResendDisabled(true);
         setTimer(60);
 

@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
+import { useRouter } from 'next/navigation';
 import toast, { Toaster } from 'react-hot-toast';
 import axios from 'axios';
 
 export default function PasswordResetForm() {
+  const router = useRouter();
   const [otp, setOtp] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -46,16 +48,21 @@ export default function PasswordResetForm() {
     }
 
     try {
-      const response = await axios.post(`${process.env.Backend_API}/forgotpassword/verify-otp`, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API}/forgotpassword/verify-otp`, {
         email: email,
         otp: otp,
         newPassword: password,
       });
-      
+
 
       // If the response is successful
-      toast.success('Password successfully updated!');
-      console.log(response.data);
+      if (response.status === 200) {
+        toast.success('Password updated successfully!');
+        router.push('/');
+      } else {
+        toast.error('Failed to update password. Please try again.');
+      }
+
 
       // Clear fields after submission
       setOtp('');
