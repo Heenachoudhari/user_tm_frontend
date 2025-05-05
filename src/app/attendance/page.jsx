@@ -1,9 +1,6 @@
 import AttendancePage from '@/Component/attendance/myattendance';
 import NavBar from '@/Component/navbar/navbar'
 
-
-
-
 import Sidebar from '@/Component/usersidebar/usersidebar'
 import React from 'react'
 

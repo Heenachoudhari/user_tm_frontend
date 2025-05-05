@@ -6,6 +6,8 @@ import Sidebar from "@/Component/Usersidebar/usersidebar";
 import Image from "next/image";
 import { FaRegEdit } from "react-icons/fa";
 import toast from "react-hot-toast";
+import { Loader } from 'lucide-react';
+import FancyLoader from "@/Component/FancyLoader";
 
 function Page() {
     const [profile, setProfile] = useState(null);
@@ -35,7 +37,7 @@ function Page() {
                     phoneNumber: data.phoneNumber,
                     email: data.email,
                     position: data.position || 'Employee',
-                    gender: data.gender ||'-', // placeholder, update if available
+                    gender: data.Gender || '-', // placeholder, update if available
                     address: data.Address || '-', // placeholder, update if available
                     dateOfJoining: data.DateOfJoining || '-', // placeholder, update if available
                 });
@@ -59,14 +61,14 @@ function Page() {
         e.preventDefault();
         try {
             const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}/profile/updateProfile`, {
-                method: 'POST',
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(formData),
                 credentials: 'include',  // Ensure you're sending cookies for authentication
             });
-    
+
             if (res.ok) {
                 const data = await res.json();
                 toast.success('Profile updated successfully!');
@@ -78,9 +80,9 @@ function Page() {
             console.error('Error updating profile:', error);
         }
     };
-    
 
-    if (!profile) return <div className="p-6 text-xl">Loading...</div>;
+
+    if (!profile) return <div className="p-6 text-xl h-screen flex items-center justify-center"><FancyLoader /></div>;
 
     return (
         <div className="min-h-screen md:flex bg-white">
@@ -107,22 +109,24 @@ function Page() {
                         </button>
                     </div>
 
-                    {/* Profile Card */}
-                    <div className="w-full h-78 bg-gradient-to-b from-[#018ABE] to-[#004058] rounded-2xl relative shadow-xl mb-8">
-                        {/* Decorative Images */}
+                    <div className="w-full h-78 bg-linear-to-b from-[#018ABE] to-[#004058] rounded-2xl relative shadow-xl mb-8">
                         <Image src="/profile/lock.png" alt="Lock Icon" width={107} height={107} className="absolute opacity-50 top-4 left-4 -rotate-[19.89deg]" />
                         <Image src="/profile/Vector92.png" alt="Vector" width={57} height={69} className="absolute opacity-50 bottom-8 left-8" />
                         <Image src={profile.photoUrl || "/profile/PP.png"} alt="Profile Picture" width={1000} height={1000} className="absolute top-10 left-[10%] h-[220px] w-[235px] object-cover rounded-full" />
                         <Image src="/profile/flagVector.png" alt="Flag Vector" width={49} height={71} className="absolute opacity-50 top-10 left-[33%]" />
-                        <Image src="/profile/pencil.png" alt="Pencil" width={113} height={147} className="absolute opacity-50 top-6 left-[45%]" />
-                        <Image src="/profile/key.png" alt="Key" width={151} height={150} className="absolute opacity-50 bottom-2 left-[35%]" />
+                        <Image src="/profile/pencil.png" alt="Vector" width={113} height={147} className="absolute opacity-50 top-6 left-[45%]" />
+                        <Image src="/profile/key.png" alt="Key Icon" width={151} height={150} className="absolute opacity-50 bottom-2 left-[35%]" />
                         <div className="absolute top-16 right-[15%] text-white">
                             <h1 className="text-4xl font-[700] mb-2">{profile.firstName} {profile.lastName}</h1>
                             <h2 className="text-3xl font-[400] mb-2">{profile.phoneNumber}</h2>
                             <h3 className="text-3xl font-[400] mb-2">{profile.email}</h3>
                             <h4 className="text-3xl font-[400] mb-2">{profile.position || "Employee"}</h4>
                         </div>
+                        <Image src="/profile/flippedFlag.png" alt="Flipped Flag" width={68} height={125} className="absolute opacity-50 top-5 right-[5%]" />
+                        <Image src="/profile/flippedPencil.png" alt="Flipped Pencil" width={113} height={147} className="absolute opacity-50 bottom-10 right-[10%]" />
                     </div>
+                    {/* Profile Card */}
+
 
                     {/* Form with pre-filled values */}
                     <form className="flex flex-col gap-8 w-full mb-8" onSubmit={handleSubmit}>
