@@ -112,6 +112,9 @@ export default function Signup() {
         <div className="flex flex-col items-center gap-1">
           <Image src="/signup/tasklogo.png" alt="Logo" width={300} height={150} />
           <Image src="/signup/image1.png" alt="Image" width={300} height={150} className="-mt-20" />
+          <p className="text-black text-3xl mx-20 text-center mt-2">Reduces time spent remembering or searching for Tasks</p>
+
+
         </div>
       </div>
 

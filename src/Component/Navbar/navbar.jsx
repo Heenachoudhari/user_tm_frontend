@@ -162,10 +162,10 @@ export default function NavBar() {
                 {notifications.length === 0
                   ? 'No new notifications'
                   : notifications.map((note, idx) => (
-                      <div key={idx} className="mb-2">
-                        {note}
-                      </div>
-                    ))}
+                    <div key={idx} className="mb-2">
+                      {note}
+                    </div>
+                  ))}
               </div>
             </div>
           )}
@@ -183,9 +183,10 @@ export default function NavBar() {
             <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white hover:border-gray-300 transition-all relative">
               <Image
                 src="/profile.png"
-                alt="User"
-                layout="fill"
-                objectFit="cover"
+                width={500}
+                height={500}
+                alt="Profile picture" // Add a description here
+                style={{ objectFit: 'cover' }}
               />
             </div>
           </button>
@@ -197,10 +198,11 @@ export default function NavBar() {
                 <div className="flex items-center space-x-3">
                   <div className="relative w-12 h-12 rounded-full overflow-hidden">
                     <Image
-                      src="/profile.png" // Replace with your profile image URL
-                      alt="User"
-                      layout="fill"
-                      objectFit="cover"
+                      src="/profile.png"
+                      width={500}
+                      height={500}
+                      alt="Profile picture" // Add a description here
+                      style={{ objectFit: 'cover' }}
                     />
                   </div>
                   <div>
@@ -216,7 +218,7 @@ export default function NavBar() {
                   className="w-full px-4 py-2 text-left flex items-center space-x-3 hover:bg-gray-100"
                 >
                   <FaUser className="text-gray-600" />
-                  <Link href ="/profile">
+                  <Link href="/profile">
                     <span>View Profile</span>
                   </Link>
                 </button>
@@ -229,7 +231,7 @@ export default function NavBar() {
                 >
                   <FaSignOutAlt />
                   <Link href="/">
-                  <span>Logout</span>
+                    <span>Logout</span>
                   </Link>
                 </button>
               </div>

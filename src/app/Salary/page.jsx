@@ -1,6 +1,7 @@
 
 import NavBar from "@/Component/Navbar/navbar";
-import SalarySlipPage from "@/Component/Salary/salaryslip";
+import Payslip from "@/Component/Salary/salaryslip";
+
 import Sidebar from "@/Component/Usersidebar/usersidebar";
 import React from "react";
 
@@ -20,7 +21,7 @@ function page() {
 
         {/* Page Content */}
         <main className="hidden md:block">
-            <SalarySlipPage/>
+            <Payslip/>
         </main>
 
 
