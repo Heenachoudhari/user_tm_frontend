@@ -6,7 +6,7 @@ import Sidebar from "@/Component/Usersidebar/usersidebar";
 import Image from "next/image";
 import { FaRegEdit } from "react-icons/fa";
 import toast from "react-hot-toast";
-import { Loader } from 'lucide-react';
+import { Loader, Save } from 'lucide-react';
 import FancyLoader from "@/Component/FancyLoader";
 
 function Page() {
@@ -72,7 +72,6 @@ function Page() {
             if (res.ok) {
                 const data = await res.json();
                 toast.success('Profile updated successfully!');
-                // Optionally refetch profile or update UI
             } else {
                 console.error('Failed to update profile');
             }
@@ -105,7 +104,7 @@ function Page() {
                             className="px-7 rounded-2xl h-12 text-lg font-semibold flex items-center gap-3 bg-[#018ABE] cursor-pointer text-white"
                             onClick={() => setIsEditing(!isEditing)}
                         >
-                            <span className="text-black"><FaRegEdit /></span>Edit
+                            {isEditing ? (<button className="flex items-center gap-2" onClick={handleSubmit}><Save />Save</button>) : (<><FaRegEdit />Edit</>)}
                         </button>
                     </div>
 
@@ -139,7 +138,7 @@ function Page() {
                                     value={formData.firstName}
                                     onChange={handleChange}
                                     disabled={!isEditing}
-                                    className="px-4 py-2 rounded-xl shadow focus:outline-none"
+                                    className="px-4 py-2 rounded-xl shadow disabled:bg-gray-100 disabled:cursor-not-allowed focus:outline-none"
                                 />
                             </div>
                             <div className="w-full flex flex-col">
@@ -150,7 +149,7 @@ function Page() {
                                     value={formData.lastName}
                                     onChange={handleChange}
                                     disabled={!isEditing}
-                                    className="px-4 py-2 rounded-xl shadow focus:outline-none"
+                                    className="px-4 py-2 rounded-xl shadow  disabled:bg-gray-100 disabled:cursor-not-allowed focus:outline-none"
                                 />
                             </div>
                         </div>
@@ -164,7 +163,7 @@ function Page() {
                                     value={formData.phoneNumber}
                                     onChange={handleChange}
                                     disabled={!isEditing}
-                                    className="px-4 py-2 rounded-xl shadow focus:outline-none"
+                                    className="px-4 py-2 rounded-xl shadow disabled:bg-gray-100 disabled:cursor-not-allowed focus:outline-none"
                                 />
                             </div>
                             <div className="w-full flex flex-col">
@@ -175,7 +174,7 @@ function Page() {
                                     value={formData.email}
                                     onChange={handleChange}
                                     disabled={!isEditing}
-                                    className="px-4 py-2 rounded-xl shadow focus:outline-none"
+                                    className="px-4 py-2 rounded-xl shadow disabled:bg-gray-100 disabled:cursor-not-allowed focus:outline-none"
                                 />
                             </div>
                         </div>
@@ -189,7 +188,7 @@ function Page() {
                                     value={formData.position}
                                     onChange={handleChange}
                                     disabled={!isEditing}
-                                    className="px-4 py-2 rounded-xl shadow focus:outline-none"
+                                    className="px-4 py-2 rounded-xl shadow disabled:bg-gray-100 disabled:cursor-not-allowed focus:outline-none"
                                 />
                             </div>
                             <div className="w-full flex flex-col">
@@ -200,7 +199,7 @@ function Page() {
                                     value={formData.gender}
                                     onChange={handleChange}
                                     disabled={!isEditing}
-                                    className="px-4 py-2 rounded-xl shadow focus:outline-none"
+                                    className="px-4 py-2 rounded-xl shadow disabled:bg-gray-100 disabled:cursor-not-allowed focus:outline-none"
                                 />
                             </div>
                         </div>
@@ -214,7 +213,7 @@ function Page() {
                                     value={formData.address}
                                     onChange={handleChange}
                                     disabled={!isEditing}
-                                    className="px-4 py-2 rounded-xl shadow focus:outline-none resize-none"
+                                    className="px-4 py-2 rounded-xl shadow disabled:bg-gray-100 disabled:cursor-not-allowed focus:outline-none resize-none"
                                 />
                             </div>
                             <div className="w-full flex flex-col">
@@ -225,18 +224,10 @@ function Page() {
                                     value={formData.dateOfJoining}
                                     onChange={handleChange}
                                     disabled={!isEditing}
-                                    className="px-4 py-2 rounded-xl shadow focus:outline-none"
+                                    className="px-4 py-2 rounded-xl shadow disabled:bg-gray-100 disabled:cursor-not-allowed focus:outline-none"
                                 />
                             </div>
                         </div>
-
-                        {isEditing && (
-                            <div className="flex justify-center gap-4 w-full">
-                                <button type="submit" className="px-24 py-3 rounded-xl text-white bg-[#018ABE] hover:bg-[#004058] shadow">
-                                    Save
-                                </button>
-                            </div>
-                        )}
                     </form>
                 </div>
             </div>

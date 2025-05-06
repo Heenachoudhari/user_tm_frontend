@@ -12,7 +12,7 @@ import ProjectStatusChart from "@/Component/dashboard/projectstatuschart";
 import PerformanceChart from "@/Component/dashboard/performancechart";
 
 function Page() {
-  const [selected, setSelected] = useState("This Year"); 
+  const [selected, setSelected] = useState("This Year");
 
   return (
     <div className="min-h-screen md:flex bg-white">
@@ -28,32 +28,32 @@ function Page() {
 
         {/* Page Content */}
         <main className="hidden md:block px-6 py-6">
-  <OverviewHeader selected={selected} setSelected={setSelected} />
+          <OverviewHeader selected={selected} setSelected={setSelected} />
 
-  <div className="grid grid-cols-3 gap-6 mt-6">
-    
-      <TaskCompletedChart selected={selected} />
- 
+          <div className="grid grid-cols-3 gap-6 mt-6">
 
-      <ProgressChart selected={selected} />
+            <TaskCompletedChart selected={selected} />
 
 
-   
-      <AttendanceChart selected={selected} />
-    
+            <ProgressChart selected={selected} />
 
 
-      <PerformanceSummary selected={selected} />
-   
 
-    
-      <ProjectStatusChart selected={selected} />
-   
-    
-      <PerformanceChart timeframe={selected} />
-   
-  </div>
-</main>
+            <AttendanceChart selected={selected} />
+
+
+
+            <PerformanceSummary selected={selected} />
+
+
+
+            <ProjectStatusChart selected={selected} />
+
+
+            <PerformanceChart timeframe={selected} />
+
+          </div>
+        </main>
 
 
 

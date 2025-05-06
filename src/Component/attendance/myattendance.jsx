@@ -38,6 +38,43 @@ export default function AttendancePage() {
   }, []);
 
   useEffect(() => {
+    const checkTodayAttendance = async () => {
+      try {
+        const res = await axiosInstance.get('/attendance/today');
+        const data = res.data;
+
+        if (data.punchedIn) {
+          const punchInDate = new Date(data.punchInTime);
+          const elapsedSeconds = Math.floor((Date.now() - punchInDate.getTime()) / 1000);
+
+          setHasPunchedIn(true);
+          setInTime(formatTime(punchInDate));
+          setInLocation(data.punchInLocation || 'Unknown');
+
+          if (!data.punchedOut) {
+            setElapsed(elapsedSeconds);
+            startElapsedTimer(punchInDate); // continue timer
+          }
+        }
+
+        if (data.punchedOut) {
+          setHasPunchedOut(true);
+          const punchOutDate = new Date(data.punchOutTime);
+          setOutTime(formatTime(punchOutDate));
+          setOutLocation(data.punchOutLocation || 'Unknown');
+          stopElapsedTimer(); // stop timer if already punched out
+        }
+      } catch (error) {
+        console.error('Failed to fetch today’s attendance:', error);
+      }
+    };
+
+    checkTodayAttendance();
+  }, []);
+
+
+
+  useEffect(() => {
     const dateStr = new Date().toLocaleDateString('en-GB');
     setCurrentDate(dateStr);
   }, []);
@@ -168,13 +205,14 @@ export default function AttendancePage() {
 
 
 
-  const startElapsedTimer = () => {
-    const startTime = Date.now();
+  const startElapsedTimer = (startDate) => {
+    const start = startDate ? startDate.getTime() : Date.now();
     intervalRef.current = setInterval(() => {
-      const seconds = Math.floor((Date.now() - startTime) / 1000);
+      const seconds = Math.floor((Date.now() - start) / 1000);
       setElapsed(seconds);
     }, 1000);
   };
+
 
   const stopElapsedTimer = () => {
     if (intervalRef.current) {
@@ -182,6 +220,7 @@ export default function AttendancePage() {
       intervalRef.current = null;
     }
   };
+
 
   const formatElapsed = (seconds) => {
     const hrs = String(Math.floor(seconds / 3600)).padStart(2, '0');
@@ -252,6 +291,7 @@ export default function AttendancePage() {
                 {isPunchingOut ? 'Punching Out...' : 'Punch Out'}
                 <TbDoorExit className="ml-2" />
               </button>
+
             </div>
 
             <div className="flex items-center gap-2 mb-2">

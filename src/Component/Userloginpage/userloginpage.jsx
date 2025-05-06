@@ -15,7 +15,7 @@ export default function Userloginpage() {
   const [error, setError] = useState('');
 
   const validatePassword = (pwd) => {
-    const lengthValid = pwd.length >= 8 && pwd.length <= 10; // Check length between 8 and 10
+    const lengthValid = pwd.length >= 8; // Check length between 8 and 10
     const hasLetter = /[a-zA-Z]/.test(pwd);
     const hasNumber = /\d/.test(pwd);
     const hasSymbol = /[^a-zA-Z0-9]/.test(pwd);
@@ -32,12 +32,12 @@ export default function Userloginpage() {
       toast.error('Please enter your email/phone and password.');
       return;
     }
-  
+
     if (!emailOrPhone.trim()) {
       toast.error('Please enter your email or phone.');
       return;
     }
-  
+
     if (!password.trim()) {
       toast.error('Please enter your password.');
       return;
@@ -57,7 +57,7 @@ export default function Userloginpage() {
     }
 
     if (!validatePassword(password)) {
-      toast.error('Password must be between 8 and 10 characters and include at least one letter, number, and special character.');
+      toast.error('Password must be between 8 and include at least one letter, number, and special character.');
       return;
     }
     try {

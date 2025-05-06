@@ -29,7 +29,7 @@ export default function LeaveTable() {
           withCredentials: true, 
         });
         
-        setLeaves(response.data.leaves || []);
+        setLeaves(response.data?.leaves || []);
       } catch (error) {
         console.error("Error fetching leaves:", error);
         toast.error('Failed to fetch leave data.');
@@ -101,8 +101,8 @@ export default function LeaveTable() {
         setReason('');
         setWordCount(0);
 
-        const updatedLeaves = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API}/leave/userLeave`);
-        setLeaves(updatedLeaves.data.leaves || []);
+        //const updatedLeaves = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API}/leave/userLeave`);
+        // setLeaves(updatedLeaves.data.leaves || []); 
       } else {
         toast.error('Failed to submit leave.');
       }
