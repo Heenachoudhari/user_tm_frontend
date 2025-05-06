@@ -10,8 +10,8 @@ const menuItems = [
   { label: 'Add TimeSheet', img: '/timesheet.png', href: '/timesheet' },
   { label: 'Calendar', img: '/calendar.png', href: '/calendar' },
   { label: 'Leave', img: '/leave.png', href: '/leavetable' },
-  { label: 'Salary', img: '/salary.png', href: '/Salary' },
-  { label: 'Company Policies', img: '/company.png', href: '/CompanyPolicy' },
+  { label: 'Salary', img: '/salary.png', href: '/salary' },
+  { label: 'Company Policies', img: '/company.png', href: '/companyPolicy' },
   { label: 'Logout', img: '/logout.png', href: '/' }
 ]
 
